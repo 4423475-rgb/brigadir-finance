@@ -1,146 +1,167 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BRIGADIR FINANCE</title>
-  <meta name="theme-color" content="#0b1220">
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <style>
-    * { box-sizing: border-box; }
-    body { margin:0; padding:20px; font-family:Arial,sans-serif; background:#0b1220; color:#f4f7fb; }
-    .app { max-width:760px; margin:0 auto; }
-    h1 { margin:8px 0 18px; text-align:center; letter-spacing:2px; }
-    .topbar { display:flex; justify-content:flex-end; margin-bottom:14px; }
-    .topbar select { width:auto; min-width:145px; }
-    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
-    .card,.panel { background:#172235; border:1px solid #26364f; border-radius:14px; padding:15px; }
-    .card span { display:block; color:#aab8ca; font-size:12px; margin-bottom:8px; }
-    .card strong { font-size:19px; overflow-wrap:anywhere; }
-    .income { color:#4ade80; } .expense { color:#fb7185; }
-    h2 { font-size:18px; margin:0 0 15px; }
-    label { display:block; margin:12px 0 6px; color:#c5d0df; font-size:14px; }
-    input,select,button { width:100%; border:0; border-radius:9px; padding:12px; font-size:16px; }
-    input,select { background:#0e192b; color:white; border:1px solid #34445d; }
-    button { margin-top:16px; background:#3b82f6; color:white; font-weight:bold; }
-    button:active { opacity:.8; }
-    .operation { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:12px 0; border-bottom:1px solid #2b3a50; }
-    .operation:last-child { border-bottom:0; }
-    .details { min-width:0; }
-    .details strong,.details small { display:block; overflow-wrap:anywhere; }
-    .details small { color:#aab8ca; margin-top:4px; }
-    .right { text-align:right; white-space:nowrap; }
-    .delete { width:auto; margin:7px 0 0; padding:6px 9px; font-size:12px; background:#653044; }
-    .empty { color:#aab8ca; text-align:center; padding:18px 0; }
-    @media(max-width:430px) { body{padding:12px} .cards{gap:6px} .card{padding:10px 8px} .card strong{font-size:15px} .card span{font-size:11px} }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1220">
+<title>BRIGADIR FINANCE</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<style>
+*{box-sizing:border-box}body{margin:0;padding:16px;font-family:Arial,sans-serif;background:#0b1220;color:#f4f7fb}
+.app{max-width:760px;margin:0 auto}h1{text-align:center;letter-spacing:2px;margin:8px 0 18px}
+.top{display:flex;justify-content:flex-end;margin-bottom:12px}.top select{width:auto;min-width:130px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.card,.panel{background:#172235;border:1px solid #26364f;border-radius:14px;padding:15px;margin-bottom:16px}
+.card span{display:block;color:#aab8ca;font-size:12px;margin-bottom:8px}.card strong{font-size:19px;overflow-wrap:anywhere}
+.income{color:#4ade80}.expense{color:#fb7185}h2{font-size:18px;margin:0 0 14px}
+label{display:block;margin:12px 0 6px;color:#c5d0df;font-size:14px}
+input,select,button{width:100%;border:0;border-radius:9px;padding:12px;font-size:16px}
+input,select{background:#0e192b;color:white;border:1px solid #34445d}button{margin-top:14px;background:#3b82f6;color:white;font-weight:bold}
+.row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}.row button{width:auto;min-width:110px}
+.operation{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #2b3a50}
+.details{min-width:0}.details strong,.details small{display:block;overflow-wrap:anywhere}.details small{color:#aab8ca;margin-top:4px}
+.right{text-align:right;white-space:nowrap}.delete{width:auto;margin:7px 0 0;padding:6px 9px;font-size:12px;background:#653044}
+.empty{color:#aab8ca;text-align:center;padding:18px 0}.muted{color:#aab8ca;font-size:13px}
+.progress{height:12px;background:#0e192b;border-radius:99px;overflow:hidden;margin:12px 0}.progress>div{height:100%;width:0;background:#4ade80;transition:width .2s}
+.progress.over>div{background:#fb7185}.chart{display:flex;align-items:end;gap:12px;height:180px;padding:12px 4px 26px;border-bottom:1px solid #40506a}
+.bar-group{flex:1;display:flex;align-items:end;justify-content:center;gap:5px;height:100%;position:relative}
+.bar{width:30%;min-width:8px;border-radius:5px 5px 0 0;min-height:2px}.bar.in{background:#4ade80}.bar.out{background:#fb7185}
+.bar-label{position:absolute;bottom:-23px;font-size:11px;color:#aab8ca;white-space:nowrap}
+.legend{display:flex;gap:16px;font-size:12px;color:#c5d0df;margin-top:12px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.category-row{margin:12px 0}.category-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:5px}.track{height:8px;background:#0e192b;border-radius:20px;overflow:hidden}.fill{height:100%;background:#fb7185}
+@media(max-width:430px){body{padding:12px}.cards{gap:6px}.card{padding:10px 8px}.card strong{font-size:15px}.card span{font-size:11px}.card,.panel{padding:12px}}
+</style>
 </head>
 <body>
 <main class="app">
-  <h1>BRIGADIR FINANCE</h1>
-  <div class="topbar">
-    <select id="language" aria-label="Language">
-      <option value="uk">🇺🇦 Українська</option>
-      <option value="ru">🇷🇺 Русский</option>
-      <option value="en">🇬🇧 English</option>
-      <option value="de">🇩🇪 Deutsch</option>
-    </select>
-  </div>
-  <section class="cards">
-    <div class="card"><span data-i18n="income">Дохід</span><strong class="income" id="totalIncome">0 ₴</strong></div>
-    <div class="card"><span data-i18n="expenses">Витрати</span><strong class="expense" id="totalExpenses">0 ₴</strong></div>
-    <div class="card"><span data-i18n="balance">Баланс</span><strong id="balance">0 ₴</strong></div>
-  </section>
-  <section class="panel">
-    <h2 data-i18n="newOperation">Нова операція</h2>
-    <label for="type" data-i18n="operationType">Тип операції</label>
-    <select id="type">
-      <option value="income" data-i18n="income">Дохід</option>
-      <option value="expense" data-i18n="expenses">Витрати</option>
-    </select>
-    <label for="category" data-i18n="category">Категорія</label>
-    <select id="category">
-      <option value="work" data-i18n="work">Робота</option>
-      <option value="materials" data-i18n="materials">Матеріали</option>
-      <option value="tools" data-i18n="tools">Інструменти</option>
-      <option value="salary" data-i18n="salary">Зарплата</option>
-      <option value="advance" data-i18n="advance">Аванс</option>
-      <option value="other" data-i18n="other">Інше</option>
-    </select>
-    <label for="description" data-i18n="description">Опис</label>
-    <input id="description" type="text" data-i18n-placeholder="descriptionPlaceholder" placeholder="Наприклад: оплата за об'єкт">
-    <label for="amount" data-i18n="amount">Сума, ₴</label>
-    <input id="amount" type="number" min="0.01" step="0.01" data-i18n-placeholder="amountPlaceholder" placeholder="Введіть суму">
-    <button id="addButton" type="button" data-i18n="addOperation">Додати операцію</button>
-  </section>
-  <section class="panel" style="margin-top:18px">
-    <h2 data-i18n="history">Історія операцій</h2>
-    <label for="historyFilter" data-i18n="show">Показати</label>
-    <select id="historyFilter">
-      <option value="all" data-i18n="allOperations">Усі операції</option>
-      <option value="income" data-i18n="onlyIncome">Тільки доходи</option>
-      <option value="expense" data-i18n="onlyExpenses">Тільки витрати</option>
-    </select>
-    <div id="history"></div>
-  </section>
+<h1>BRIGADIR FINANCE</h1>
+<div class="top"><select id="language" aria-label="Language"><option value="uk">Українська</option><option value="ru">Русский</option><option value="en">English</option><option value="de">Deutsch</option></select></div>
+<section class="cards">
+<div class="card"><span data-i18n="income">Дохід</span><strong class="income" id="totalIncome">0 ₴</strong></div>
+<div class="card"><span data-i18n="expenses">Витрати</span><strong class="expense" id="totalExpenses">0 ₴</strong></div>
+<div class="card"><span data-i18n="balance">Баланс</span><strong id="balance">0 ₴</strong></div>
+</section>
+<section class="panel">
+<h2 data-i18n="budgetTitle">Місячний бюджет</h2>
+<label for="budgetInput" data-i18n="budgetLimit">Ліміт витрат на місяць, ₴</label>
+<div class="row"><input id="budgetInput" type="number" min="0" step="0.01" placeholder="0"><button id="saveBudget" type="button" data-i18n="save">Зберегти</button></div>
+<div class="progress" id="budgetProgress"><div id="budgetBar"></div></div>
+<div class="muted" id="budgetText"></div>
+</section>
+<section class="panel">
+<h2 data-i18n="monthlyChart">Доходи та витрати за місяцями</h2>
+<div class="chart" id="monthlyChart"></div>
+<div class="legend"><span><i class="dot" style="background:#4ade80"></i><span data-i18n="income">Дохід</span></span><span><i class="dot" style="background:#fb7185"></i><span data-i18n="expenses">Витрати</span></span></div>
+</section>
+<section class="panel">
+<h2 data-i18n="categoryChart">Витрати за категоріями (цей місяць)</h2>
+<div id="categoryChart"></div>
+</section>
+<section class="panel">
+<h2 data-i18n="newOperation">Нова операція</h2>
+<label for="type" data-i18n="type">Тип операції</label>
+<select id="type"><option value="income" data-i18n="income">Дохід</option><option value="expense" data-i18n="expenses">Витрати</option></select>
+<label for="category" data-i18n="category">Категорія</label>
+<select id="category">
+<option value="work" data-i18n="work">Робота</option><option value="materials" data-i18n="materials">Матеріали</option><option value="tools" data-i18n="tools">Інструменти</option><option value="salary" data-i18n="salary">Зарплата</option><option value="advance" data-i18n="advance">Аванс</option><option value="other" data-i18n="other">Інше</option>
+</select>
+<label for="description" data-i18n="description">Опис</label><input id="description" type="text" data-placeholder="descriptionPlaceholder" placeholder="Наприклад: оплата за об’єкт">
+<label for="amount" data-i18n="amount">Сума, ₴</label><input id="amount" type="number" min="0.01" step="0.01" data-placeholder="amountPlaceholder" placeholder="Введіть суму">
+<button id="addButton" type="button" data-i18n="add">Додати операцію</button>
+</section>
+<section class="panel">
+<h2 data-i18n="history">Історія операцій</h2>
+<label for="historyFilter" data-i18n="show">Показати</label>
+<select id="historyFilter"><option value="all" data-i18n="all">Усі операції</option><option value="income" data-i18n="onlyIncome">Лише доходи</option><option value="expense" data-i18n="onlyExpenses">Лише витрати</option></select>
+<div id="history"></div>
+</section>
 </main>
 <script>
-const translations = {
- uk:{income:"Дохід",expenses:"Витрати",balance:"Баланс",newOperation:"Нова операція",operationType:"Тип операції",category:"Категорія",work:"Робота",materials:"Матеріали",tools:"Інструменти",salary:"Зарплата",advance:"Аванс",other:"Інше",description:"Опис",descriptionPlaceholder:"Наприклад: оплата за об'єкт",amount:"Сума, ₴",amountPlaceholder:"Введіть суму",addOperation:"Додати операцію",history:"Історія операцій",show:"Показати",allOperations:"Усі операції",onlyIncome:"Тільки доходи",onlyExpenses:"Тільки витрати",empty:"Операцій поки немає",emptyFiltered:"Операцій цього типу поки немає",delete:"Видалити",confirmDelete:"Видалити цю операцію?",validation:"Заповніть опис і введіть суму більшу за нуль."},
- ru:{income:"Доход",expenses:"Расходы",balance:"Баланс",newOperation:"Новая операция",operationType:"Тип операции",category:"Категория",work:"Работа",materials:"Материалы",tools:"Инструменты",salary:"Зарплата",advance:"Аванс",other:"Другое",description:"Описание",descriptionPlaceholder:"Например: оплата за объект",amount:"Сумма, ₴",amountPlaceholder:"Введите сумму",addOperation:"Добавить операцию",history:"История операций",show:"Показать",allOperations:"Все операции",onlyIncome:"Только доходы",onlyExpenses:"Только расходы",empty:"Пока операций нет",emptyFiltered:"Операций этого типа пока нет",delete:"Удалить",confirmDelete:"Удалить эту операцию?",validation:"Заполните описание и введите сумму больше нуля."},
- en:{income:"Income",expenses:"Expenses",balance:"Balance",newOperation:"New transaction",operationType:"Transaction type",category:"Category",work:"Work",materials:"Materials",tools:"Tools",salary:"Salary",advance:"Advance",other:"Other",description:"Description",descriptionPlaceholder:"For example: payment for a project",amount:"Amount, ₴",amountPlaceholder:"Enter amount",addOperation:"Add transaction",history:"Transaction history",show:"Show",allOperations:"All transactions",onlyIncome:"Income only",onlyExpenses:"Expenses only",empty:"No transactions yet",emptyFiltered:"No transactions of this type yet",delete:"Delete",confirmDelete:"Delete this transaction?",validation:"Enter a description and an amount greater than zero."},
- de:{income:"Einnahmen",expenses:"Ausgaben",balance:"Kontostand",newOperation:"Neue Buchung",operationType:"Buchungstyp",category:"Kategorie",work:"Arbeit",materials:"Materialien",tools:"Werkzeuge",salary:"Gehalt",advance:"Vorschuss",other:"Sonstiges",description:"Beschreibung",descriptionPlaceholder:"Zum Beispiel: Zahlung für ein Objekt",amount:"Betrag, ₴",amountPlaceholder:"Betrag eingeben",addOperation:"Buchung hinzufügen",history:"Buchungsverlauf",show:"Anzeigen",allOperations:"Alle Buchungen",onlyIncome:"Nur Einnahmen",onlyExpenses:"Nur Ausgaben",empty:"Noch keine Buchungen",emptyFiltered:"Keine Buchungen dieses Typs",delete:"Löschen",confirmDelete:"Diese Buchung löschen?",validation:"Beschreibung und einen Betrag größer als null eingeben."}
+const translations={
+uk:{income:"Дохід",expenses:"Витрати",balance:"Баланс",budgetTitle:"Місячний бюджет",budgetLimit:"Ліміт витрат на місяць, ₴",save:"Зберегти",monthlyChart:"Доходи та витрати за місяцями",categoryChart:"Витрати за категоріями (цей місяць)",newOperation:"Нова операція",type:"Тип операції",category:"Категорія",work:"Робота",materials:"Матеріали",tools:"Інструменти",salary:"Зарплата",advance:"Аванс",other:"Інше",description:"Опис",descriptionPlaceholder:"Наприклад: оплата за об’єкт",amount:"Сума, ₴",amountPlaceholder:"Введіть суму",add:"Додати операцію",history:"Історія операцій",show:"Показати",all:"Усі операції",onlyIncome:"Лише доходи",onlyExpenses:"Лише витрати",fillError:"Заповніть опис і введіть суму більше нуля.",deleteConfirm:"Видалити цю операцію?",none:"Операцій поки немає",noneFiltered:"Операцій цього типу поки немає",budgetUnset:"Встановіть місячний ліміт витрат.",spent:"Витрачено",left:"Залишилося",over:"Перевищення бюджету",saved:"Бюджет збережено",noExpenses:"Витрат за цей місяць немає",noChart:"Поки недостатньо даних"},
+ru:{income:"Доходы",expenses:"Расходы",balance:"Баланс",budgetTitle:"Месячный бюджет",budgetLimit:"Лимит расходов на месяц, ₴",save:"Сохранить",monthlyChart:"Доходы и расходы по месяцам",categoryChart:"Расходы по категориям (этот месяц)",newOperation:"Новая операция",type:"Тип операции",category:"Категория",work:"Работа",materials:"Материалы",tools:"Инструменты",salary:"Зарплата",advance:"Аванс",other:"Другое",description:"Описание",descriptionPlaceholder:"Например: оплата за объект",amount:"Сумма, ₴",amountPlaceholder:"Введите сумму",add:"Добавить операцию",history:"История операций",show:"Показать",all:"Все операции",onlyIncome:"Только доходы",onlyExpenses:"Только расходы",fillError:"Заполни описание и введи сумму больше нуля.",deleteConfirm:"Удалить эту операцию?",none:"Пока операций нет",noneFiltered:"Операций этого типа пока нет",budgetUnset:"Установи месячный лимит расходов.",spent:"Потрачено",left:"Осталось",over:"Превышение бюджета",saved:"Бюджет сохранён",noExpenses:"В этом месяце расходов нет",noChart:"Пока недостаточно данных"},
+en:{income:"Income",expenses:"Expenses",balance:"Balance",budgetTitle:"Monthly budget",budgetLimit:"Monthly spending limit, ₴",save:"Save",monthlyChart:"Income and expenses by month",categoryChart:"Expenses by category (this month)",newOperation:"New transaction",type:"Transaction type",category:"Category",work:"Work",materials:"Materials",tools:"Tools",salary:"Salary",advance:"Advance",other:"Other",description:"Description",descriptionPlaceholder:"For example: project payment",amount:"Amount, ₴",amountPlaceholder:"Enter amount",add:"Add transaction",history:"Transaction history",show:"Show",all:"All transactions",onlyIncome:"Income only",onlyExpenses:"Expenses only",fillError:"Enter a description and an amount greater than zero.",deleteConfirm:"Delete this transaction?",none:"No transactions yet",noneFiltered:"No transactions of this type yet",budgetUnset:"Set a monthly spending limit.",spent:"Spent",left:"Remaining",over:"Over budget",saved:"Budget saved",noExpenses:"No expenses this month",noChart:"Not enough data yet"},
+de:{income:"Einnahmen",expenses:"Ausgaben",balance:"Kontostand",budgetTitle:"Monatsbudget",budgetLimit:"Monatliches Ausgabenlimit, ₴",save:"Speichern",monthlyChart:"Einnahmen und Ausgaben pro Monat",categoryChart:"Ausgaben nach Kategorie (dieser Monat)",newOperation:"Neue Buchung",type:"Buchungstyp",category:"Kategorie",work:"Arbeit",materials:"Material",tools:"Werkzeuge",salary:"Gehalt",advance:"Vorschuss",other:"Sonstiges",description:"Beschreibung",descriptionPlaceholder:"Zum Beispiel: Projektzahlung",amount:"Betrag, ₴",amountPlaceholder:"Betrag eingeben",add:"Buchung hinzufügen",history:"Buchungsverlauf",show:"Anzeigen",all:"Alle Buchungen",onlyIncome:"Nur Einnahmen",onlyExpenses:"Nur Ausgaben",fillError:"Beschreibung und einen Betrag größer null eingeben.",deleteConfirm:"Diese Buchung löschen?",none:"Noch keine Buchungen",noneFiltered:"Keine Buchungen dieses Typs",budgetUnset:"Monatliches Ausgabenlimit festlegen.",spent:"Ausgegeben",left:"Übrig",over:"Budget überschritten",saved:"Budget gespeichert",noExpenses:"Diesen Monat keine Ausgaben",noChart:"Noch nicht genügend Daten"}
 };
-let language = localStorage.getItem("brigadirLanguage") || "uk";
-let operations = JSON.parse(localStorage.getItem("brigadirOperations") || "[]");
-const $ = id => document.getElementById(id);
-function t(key){return translations[language][key] || translations.uk[key] || key;}
-function saveData(){localStorage.setItem("brigadirOperations",JSON.stringify(operations));}
+let operations=JSON.parse(localStorage.getItem("brigadirOperations")||"[]");
+let language=localStorage.getItem("brigadirLanguage")||"uk";
+let monthlyBudget=Number(localStorage.getItem("brigadirMonthlyBudget")||0);
+const $=id=>document.getElementById(id), t=key=>translations[language][key]||key;
+const categoryKeys=["work","materials","tools","salary","advance","other"];
+function dateKey(op){
+ if(op.isoDate)return op.isoDate.slice(0,7);
+ const p=String(op.date||"").split(".");
+ if(p.length===3)return p[2]+"-"+p[1].padStart(2,"0");
+ const d=new Date(op.date);return isNaN(d)?new Date().toISOString().slice(0,7):d.toISOString().slice(0,7);
+}
+function save(){localStorage.setItem("brigadirOperations",JSON.stringify(operations))}
+function money(n){return Number(n||0).toLocaleString(language==="de"?"de-DE":language==="en"?"en-US":language==="uk"?"uk-UA":"ru-RU",{maximumFractionDigits:2})+" ₴"}
 function applyLanguage(){
-  document.documentElement.lang=language;
-  document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n);});
-  document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder);});
-  $("language").value=language;
-  updateScreen();
+ document.documentElement.lang=language;
+ document.querySelectorAll("[data-i18n]").forEach(el=>{const key=el.dataset.i18n;el.textContent=t(key)});
+ document.querySelectorAll("[data-placeholder]").forEach(el=>el.placeholder=t(el.dataset.placeholder));
+ $("language").value=language;$("budgetInput").value=monthlyBudget||"";
+ updateScreen();
+}
+function saveBudget(){
+ const n=Number($("budgetInput").value);
+ if(!Number.isFinite(n)||n<0){$("budgetInput").value=monthlyBudget||"";return}
+ monthlyBudget=n;localStorage.setItem("brigadirMonthlyBudget",String(n));updateScreen();alert(t("saved"));
 }
 function addOperation(){
-  const type=$("type").value, category=$("category").value, description=$("description").value.trim(), amount=Number($("amount").value);
-  if(!description || !Number.isFinite(amount) || amount<=0){alert(t("validation"));return;}
-  operations.push({type,category,description,amount,date:new Date().toLocaleDateString(language==="en"?"en-GB":language==="de"?"de-DE":language==="ru"?"ru-RU":"uk-UA")});
-  saveData(); $("description").value=""; $("amount").value=""; updateScreen();
+ const type=$("type").value,category=$("category").value,description=$("description").value.trim(),amount=Number($("amount").value);
+ if(!description||!Number.isFinite(amount)||amount<=0){alert(t("fillError"));return}
+ const now=new Date();
+ operations.push({type,category,description,amount,date:now.toLocaleDateString("ru-RU"),isoDate:now.toISOString()});
+ save();$("description").value="";$("amount").value="";updateScreen();
 }
-function deleteOperation(index){if(!confirm(t("confirmDelete")))return;operations.splice(index,1);saveData();updateScreen();}
+function deleteOperation(index){if(!confirm(t("deleteConfirm")))return;operations.splice(index,1);save();updateScreen()}
+function renderBudget(){
+ const month=new Date().toISOString().slice(0,7);
+ const spent=operations.filter(o=>o.type==="expense"&&dateKey(o)===month).reduce((s,o)=>s+Number(o.amount||0),0);
+ const pct=monthlyBudget>0?Math.min(100,spent/monthlyBudget*100):0;
+ $("budgetBar").style.width=pct+"%";$("budgetProgress").classList.toggle("over",monthlyBudget>0&&spent>monthlyBudget);
+ $("budgetText").textContent=monthlyBudget>0?`${t("spent")}: ${money(spent)} / ${money(monthlyBudget)} · ${spent>monthlyBudget?t("over"):t("left")+": "+money(monthlyBudget-spent)}`:t("budgetUnset");
+}
+function renderMonthlyChart(){
+ const months=[];const now=new Date();
+ for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({key:d.toISOString().slice(0,7),label:d.toLocaleDateString(language==="de"?"de-DE":language==="en"?"en-US":language==="uk"?"uk-UA":"ru-RU",{month:"short"})})}
+ const vals=months.map(m=>({ ...m,income:0,expense:0 }));
+ operations.forEach(o=>{const v=vals.find(x=>x.key===dateKey(o));if(v)v[o.type==="income"?"income":"expense"]+=Number(o.amount||0)});
+ const max=Math.max(1,...vals.flatMap(v=>[v.income,v.expense]));
+ $("monthlyChart").replaceChildren();
+ vals.forEach(v=>{const group=document.createElement("div");group.className="bar-group";
+ [["income","in"],["expense","out"]].forEach(([k,c])=>{const b=document.createElement("div");b.className="bar "+c;b.style.height=Math.max(v[k]?3:0,v[k]/max*100)+"%";b.title=t(k==="income"?"income":"expenses")+": "+money(v[k]);group.appendChild(b)});
+ const label=document.createElement("div");label.className="bar-label";label.textContent=v.label;group.appendChild(label);$("monthlyChart").appendChild(group)});
+}
+function renderCategoryChart(){
+ const month=new Date().toISOString().slice(0,7), totals={};
+ operations.filter(o=>o.type==="expense"&&dateKey(o)===month).forEach(o=>{const k=o.category||"other";totals[k]=(totals[k]||0)+Number(o.amount||0)});
+ const entries=Object.entries(totals).sort((a,b)=>b[1]-a[1]),total=entries.reduce((s,x)=>s+x[1],0),root=$("categoryChart");root.replaceChildren();
+ if(!entries.length){root.textContent=t("noExpenses");root.className="empty";return}
+ root.className="";
+ entries.forEach(([key,value])=>{const wrap=document.createElement("div");wrap.className="category-row";const head=document.createElement("div");head.className="category-head";const name=document.createElement("span");name.textContent=t(key);const val=document.createElement("strong");val.textContent=money(value);head.append(name,val);const track=document.createElement("div");track.className="track";const fill=document.createElement("div");fill.className="fill";fill.style.width=(value/total*100)+"%";track.append(fill);wrap.append(head,track);root.append(wrap)});
+}
 function updateScreen(){
-  let income=0,expenses=0;
-  operations.forEach(op=>{if(op.type==="income")income+=Number(op.amount)||0;else expenses+=Number(op.amount)||0;});
-  const locale={uk:"uk-UA",ru:"ru-RU",en:"en-GB",de:"de-DE"}[language];
-  $("totalIncome").textContent=income.toLocaleString(locale)+" ₴";
-  $("totalExpenses").textContent=expenses.toLocaleString(locale)+" ₴";
-  const balance=income-expenses; $("balance").textContent=balance.toLocaleString(locale)+" ₴"; $("balance").className=balance>=0?"income":"expense";
-  const history=$("history"); history.replaceChildren();
-  if(operations.length===0){const empty=document.createElement("div");empty.className="empty";empty.textContent=t("empty");history.appendChild(empty);return;}
-  const filter=$("historyFilter").value;
-  const visible=operations.map((operation,index)=>({operation,index})).filter(item=>filter==="all"||item.operation.type===filter);
-  if(!visible.length){const empty=document.createElement("div");empty.className="empty";empty.textContent=t("emptyFiltered");history.appendChild(empty);return;}
-  visible.forEach(({operation,index})=>{
-    const row=document.createElement("div");row.className="operation";
-    const details=document.createElement("div");details.className="details";
-    const title=document.createElement("strong");title.textContent=operation.description;
-    const subtitle=document.createElement("small");subtitle.textContent=t(operation.category)+" • "+operation.date;
-    details.append(title,subtitle);
-    const right=document.createElement("div");right.className="right";
-    const amount=document.createElement("strong");amount.className=operation.type==="income"?"income":"expense";
-    amount.textContent=(operation.type==="income"?"+":"−")+(Number(operation.amount)||0).toLocaleString(locale)+" ₴";
-    const del=document.createElement("button");del.className="delete";del.type="button";del.textContent=t("delete");del.addEventListener("click",()=>deleteOperation(index));
-    right.append(amount,del);row.append(details,right);history.appendChild(row);
-  });
+ const income=operations.filter(o=>o.type==="income").reduce((s,o)=>s+Number(o.amount||0),0),expenses=operations.filter(o=>o.type==="expense").reduce((s,o)=>s+Number(o.amount||0),0);
+ $("totalIncome").textContent=money(income);$("totalExpenses").textContent=money(expenses);$("balance").textContent=money(income-expenses);$("balance").className=income-expenses>=0?"income":"expense";
+ renderBudget();renderMonthlyChart();renderCategoryChart();
+ const root=$("history");root.replaceChildren();
+ const filter=$("historyFilter").value;
+ const visible=operations.map((operation,index)=>({operation,index})).filter(x=>filter==="all"||x.operation.type===filter);
+ if(!visible.length){const e=document.createElement("div");e.className="empty";e.textContent=operations.length?t("noneFiltered"):t("none");root.append(e);return}
+ visible.slice().reverse().forEach(({operation:o,index})=>{
+ const row=document.createElement("div");row.className="operation";const details=document.createElement("div");details.className="details";
+ const title=document.createElement("strong");title.textContent=o.description;const sub=document.createElement("small");sub.textContent=t(o.category||"other")+" • "+(o.date||"");
+ details.append(title,sub);const right=document.createElement("div");right.className="right";const amount=document.createElement("strong");amount.className=o.type==="income"?"income":"expense";amount.textContent=(o.type==="income"?"+":"−")+money(o.amount);
+ const del=document.createElement("button");del.className="delete";del.type="button";del.textContent=language==="en"?"Delete":language==="de"?"Löschen":language==="uk"?"Видалити":"Удалить";del.addEventListener("click",()=>deleteOperation(index));
+ right.append(amount,del);row.append(details,right);root.append(row);
+ });
 }
-$("language").addEventListener("change",e=>{language=e.target.value;localStorage.setItem("brigadirLanguage",language);applyLanguage();});
-$("addButton").addEventListener("click",addOperation);
-$("historyFilter").addEventListener("change",updateScreen);
+$("language").addEventListener("change",e=>{language=e.target.value;localStorage.setItem("brigadirLanguage",language);applyLanguage()});
+$("saveBudget").addEventListener("click",saveBudget);$("addButton").addEventListener("click",addOperation);$("historyFilter").addEventListener("change",updateScreen);
 applyLanguage();
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(error=>console.log("Service worker registration failed:",error)));}
+if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
 </script>
-</body>
-</html>
+</body></html>
