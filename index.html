@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0b1220">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
   <title>BRIGADIR FINANCE</title>
+  <meta name="theme-color" content="#0b1220">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <style>
     * { box-sizing: border-box; }
     body {
@@ -125,6 +125,12 @@
 
     <section class="panel" style="margin-top: 18px;">
       <h2>История операций</h2>
+      <label for="historyFilter">Показать</label>
+      <select id="historyFilter">
+        <option value="all">Все операции</option>
+        <option value="income">Только доходы</option>
+        <option value="expense">Только расходы</option>
+      </select>
       <div id="history"></div>
     </section>
   </main>
@@ -201,7 +207,22 @@
         return;
       }
 
-      operations.forEach(function(operation, index) {
+      const filter = document.getElementById("historyFilter").value;
+      const visibleOperations = operations
+        .map(function(operation, index) { return { operation: operation, index: index }; })
+        .filter(function(item) { return filter === "all" || item.operation.type === filter; });
+
+      if (visibleOperations.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "Операций этого типа пока нет";
+        history.appendChild(empty);
+        return;
+      }
+
+      visibleOperations.forEach(function(item) {
+        const operation = item.operation;
+        const index = item.index;
         const row = document.createElement("div");
         row.className = "operation";
 
@@ -243,11 +264,16 @@
     }
 
     document.getElementById("addButton").addEventListener("click", addOperation);
+    document.getElementById("historyFilter").addEventListener("change", updateScreen);
     updateScreen();
   </script>
   <script>
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
+      window.addEventListener("load", function() {
+        navigator.serviceWorker.register("./sw.js").catch(function(error) {
+          console.log("Service worker registration failed:", error);
+        });
+      });
     }
   </script>
 </body>
