@@ -31,7 +31,7 @@ input,select{background:#0e192b;color:white;border:1px solid #34445d}button{marg
 .bar.in{background:#4ade80}.bar.out{background:#fb7185}
 .bar-label{position:absolute;bottom:-23px;font-size:11px;color:#aab8ca;white-space:nowrap}
 .legend{display:flex;gap:16px;font-size:12px;color:#c5d0df;margin-top:12px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
-.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.stat-box{background:#0e192b;border:1px solid #26364e;border-radius:12px;padding:12px;min-width:0}.stat-box span{display:block;color:#aab8ca;font-size:12px;margin-bottom:7px}.stat-box strong{display:block;font-size:17px;overflow-wrap:anywhere}.stat-note{font-size:12px;color:#aab8ca;margin-top:5px}.goal-card{background:#0e192b;border:1px solid #26364e;border-radius:12px;padding:13px;margin:12px 0}.goal-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.goal-head strong{overflow-wrap:anywhere}.goal-amounts{display:flex;justify-content:space-between;gap:8px;color:#aab8ca;font-size:12px;margin-top:8px}.goal-progress{height:10px;background:#172235;border-radius:99px;overflow:hidden;margin:10px 0}.goal-progress>div{height:100%;background:#4ade80;width:0;transition:width .2s}.goal-actions{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.goal-actions input{min-width:0}.goal-actions button{width:auto;margin:0;padding:10px 12px}.goal-delete{width:auto;margin:10px 0 0;padding:6px 9px;font-size:12px;background:#653044}.category-row{margin:12px 0}.category-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:5px}.track{height:8px;background:#0e192b;border-radius:20px;overflow:hidden}.fill{height:100%;background:#fb7185}
+.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.stat-box{background:#0e192b;border:1px solid #26364e;border-radius:12px;padding:12px;min-width:0}.stat-box span{display:block;color:#aab8ca;font-size:12px;margin-bottom:7px}.stat-box strong{display:block;font-size:17px;overflow-wrap:anywhere}.stat-note{font-size:12px;color:#aab8ca;margin-top:5px}.goal-card{background:#0e192b;border:1px solid #26364e;border-radius:12px;padding:13px;margin:12px 0}.goal-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.goal-head strong{overflow-wrap:anywhere}.goal-amounts{display:flex;justify-content:space-between;gap:8px;color:#aab8ca;font-size:12px;margin-top:8px}.goal-progress{height:10px;background:#172235;border-radius:99px;overflow:hidden;margin:10px 0}.goal-progress>div{height:100%;background:#4ade80;width:0;transition:width .2s}.goal-actions{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.goal-actions input{min-width:0}.goal-actions button{width:auto;margin:0;padding:10px 12px}.goal-delete{width:auto;margin:10px 0 0;padding:6px 9px;font-size:12px;background:#653044}.wallet-form{margin-top:14px}.wallet-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #2b3a50}.wallet-item strong,.wallet-item small{display:block;overflow-wrap:anywhere}.wallet-item small{color:#aab8ca;margin-top:4px}.wallet-total{font-weight:bold;margin-top:12px}.wallet-delete{width:auto;margin:0;padding:6px 9px;font-size:12px;background:#653044}.category-row{margin:12px 0}.category-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:5px}.track{height:8px;background:#0e192b;border-radius:20px;overflow:hidden}.fill{height:100%;background:#fb7185}
 @media(max-width:430px){body{padding:12px}.cards{gap:6px}.card{padding:10px 8px}.card strong{font-size:15px}.card span{font-size:11px}.card,.panel{padding:12px}}
 [hidden]{display:none!important}
 </style>
@@ -44,6 +44,23 @@ input,select{background:#0e192b;color:white;border:1px solid #34445d}button{marg
 <div class="card"><span data-i18n="income">Дохід</span><strong class="income" id="totalIncome">0 ₴</strong></div>
 <div class="card"><span data-i18n="expenses">Витрати</span><strong class="expense" id="totalExpenses">0 ₴</strong></div>
 <div class="card"><span data-i18n="balance">Баланс</span><strong id="balance">0 ₴</strong></div>
+</section>
+<section class="panel" id="walletPanel">
+<h2 id="walletTitle">Кошельки и счета</h2>
+<div id="walletList"></div>
+<div class="muted" id="walletTotal"></div>
+<div class="wallet-form">
+<label for="walletName" id="walletNameLabel">Название счёта</label><input id="walletName" maxlength="40" placeholder="Например: Наличные">
+<label for="walletOpening" id="walletOpeningLabel">Начальный остаток, ₴</label><input id="walletOpening" type="number" min="0" step="0.01" value="0">
+<button id="addWalletButton" type="button">Добавить счёт</button>
+</div>
+<hr style="border:0;border-top:1px solid #34445d;margin:18px 0">
+<h2 id="transferTitle">Перевод между счетами</h2>
+<label for="transferFrom" id="transferFromLabel">Откуда</label><select id="transferFrom"></select>
+<label for="transferTo" id="transferToLabel">Куда</label><select id="transferTo"></select>
+<label for="transferAmount" id="transferAmountLabel">Сумма перевода, ₴</label><input id="transferAmount" type="number" min="0.01" step="0.01" placeholder="0">
+<button id="addTransferButton" type="button">Перевести</button>
+<div id="transferHistory"></div>
 </section>
 <section class="panel">
 <h2 data-i18n="monthlyChart">Доходи та витрати за місяцями</h2>
@@ -82,6 +99,7 @@ input,select{background:#0e192b;color:white;border:1px solid #34445d}button{marg
 <select id="category">
 <option value="work" data-i18n="work">Робота</option><option value="materials" data-i18n="materials">Матеріали</option><option value="tools" data-i18n="tools">Інструменти</option><option value="salary" data-i18n="salary">Зарплата</option><option value="advance" data-i18n="advance">Аванс</option><option value="other" data-i18n="other">Інше</option>
 </select>
+<label for="operationWallet" id="operationWalletLabel">Счёт</label><select id="operationWallet"></select>
 <label for="description" data-i18n="description">Опис</label><input id="description" type="text" data-placeholder="descriptionPlaceholder" placeholder="Наприклад: оплата за об’єкт">
 <label for="amount" data-i18n="amount">Сума, ₴</label><input id="amount" type="number" min="0.01" step="0.01" data-placeholder="amountPlaceholder" placeholder="Введіть суму">
 <button id="addButton" type="button" data-i18n="add">Додати операцію</button>
@@ -130,7 +148,7 @@ en:{statsTitle:"Extended statistics",statsPeriod:"Period",statsNet:"Income minus
 de:{statsTitle:"Erweiterte Statistik",statsPeriod:"Zeitraum",statsNet:"Einnahmen minus Ausgaben",statsTopCategory:"Größte Ausgabenkategorie",statsNoCategory:"Keine Ausgaben",statsVsPrevious:"zum Vormonat",statsNoPrevious:"Keine Daten zum Vormonat",statsUp:"Anstieg",statsDown:"Rückgang",manageCategoriesTitle:"Buchungskategorien",categoryType:"Kategorietyp",newCategoryName:"Name der neuen Kategorie",categoryNamePlaceholder:"Zum Beispiel: Lebensmittel",addCategory:"Hinzufügen",categoryExists:"Diese Kategorie existiert bereits.",categoryAdded:"Kategorie hinzugefügt.",categoryDelete:"Diese Kategorie löschen?",categoryInUse:"Diese Kategorie wird in Buchungen verwendet und kann nicht gelöscht werden.",noCustomCategories:"Noch keine eigenen Kategorien",settingsTitle:"Einstellungen",languageTitle:"App-Sprache",back:"Zurück",backupTitle:"Sicherung",backupDescription:"Speichern Sie Ihre Daten in einer Datei oder stellen Sie sie aus einer Sicherung wieder her.",exportBackup:"Sicherung herunterladen",importBackup:"Sicherung wiederherstellen",backupExported:"Sicherung heruntergeladen.",backupInvalid:"Die Sicherungsdatei ist beschädigt oder hat ein unbekanntes Format.",backupConfirm:"Daten aus dieser Datei wiederherstellen? Buchungen, Kategorien, Budget, Ziele und Sprache werden ersetzt.",backupRestored:"Daten erfolgreich wiederhergestellt.",backupReadError:"Die Sicherungsdatei konnte nicht gelesen werden.",income:"Einnahmen",expenses:"Ausgaben",balance:"Kontostand",budgetTitle:"Monatsbudget",budgetLimit:"Monatliches Ausgabenlimit, ₴",save:"Speichern",monthlyChart:"Einnahmen und Ausgaben pro Monat",categoryChart:"Ausgaben nach Kategorie (dieser Monat)",newOperation:"Neue Buchung",type:"Buchungstyp",category:"Kategorie",work:"Arbeit",materials:"Material",tools:"Werkzeuge",salary:"Gehalt",advance:"Vorschuss",other:"Sonstiges",description:"Beschreibung",descriptionPlaceholder:"Zum Beispiel: Projektzahlung",amount:"Betrag, ₴",amountPlaceholder:"Betrag eingeben",add:"Buchung hinzufügen",history:"Buchungsverlauf",show:"Anzeigen",all:"Alle Buchungen",onlyIncome:"Nur Einnahmen",onlyExpenses:"Nur Ausgaben",fillError:"Beschreibung und einen Betrag größer null eingeben.",deleteConfirm:"Diese Buchung löschen?",none:"Noch keine Buchungen",noneFiltered:"Keine Buchungen dieses Typs",budgetUnset:"Monatliches Ausgabenlimit festlegen.",spent:"Ausgegeben",left:"Übrig",over:"Budget überschritten",saved:"Budget gespeichert",noExpenses:"Diesen Monat keine Ausgaben",storageError:"Daten konnten nicht gespeichert werden. Prüfen Sie den Browserspeicher.",dataRecovered:"Einige ungültige Einträge wurden übersprungen. Eine Sicherung wurde im Browserspeicher abgelegt."}
 };
 const $=id=>document.getElementById(id);
-const STORAGE_KEYS={operations:"brigadirOperations",language:"brigadirLanguage",budget:"brigadirMonthlyBudget",categories:"brigadirCustomCategories",recovery:"brigadirOperations_recovery",goals:"brigadirFinancialGoals"};
+const STORAGE_KEYS={operations:"brigadirOperations",language:"brigadirLanguage",budget:"brigadirMonthlyBudget",categories:"brigadirCustomCategories",recovery:"brigadirOperations_recovery",goals:"brigadirFinancialGoals",wallets:"finoraWallets",transfers:"finoraTransfers"};
 function readStorage(key,fallback=""){try{return localStorage.getItem(key)??fallback}catch{return fallback}}
 function validOperation(o){
  if(!o||typeof o!=="object"||Array.isArray(o))return false;
@@ -228,6 +246,36 @@ const goalTranslations={
  de:{goalsTitle:"Sparziele",goalsDescription:"Erstellen Sie Ziele und verfolgen Sie Ihre Ersparnisse.",goalName:"Zielname",goalNamePlaceholder:"Zum Beispiel: Neuer Laptop",goalTarget:"Zielbetrag, ₴",goalTargetPlaceholder:"Zum Beispiel: 20000",addGoal:"Ziel erstellen",goalAddAmount:"Einzahlung, ₴",goalAdd:"Einzahlen",goalSaved:"Gespart",goalRemaining:"Noch benötigt",goalComplete:"Ziel erreicht!",goalDelete:"Dieses Ziel löschen?",goalInvalid:"Geben Sie einen Namen und einen Betrag größer null ein.",goalAdded:"Ziel erstellt.",goalLimit:"Sie können bis zu 50 Ziele erstellen.",goalNoItems:"Noch keine Ziele. Erstellen Sie Ihr erstes Ziel!",goalContributionInvalid:"Geben Sie eine Einzahlung größer null ein."}
 };
 const t=key=>translations[language][key]||goalTranslations[language]?.[key]||key;
+const walletTranslations={
+ uk:{title:"Гаманці та рахунки",name:"Назва рахунку",namePlaceholder:"Наприклад: Готівка",opening:"Початковий залишок, ₴",add:"Додати рахунок",total:"Разом на рахунках",transferTitle:"Переказ між рахунками",from:"Звідки",to:"Куди",amount:"Сума переказу, ₴",send:"Переказати",account:"Рахунок",cash:"Готівка",card:"Банківська картка",savings:"Накопичення",delete:"Видалити",deleteConfirm:"Видалити цей рахунок?",inUse:"Рахунок використовується в операціях або переказах і не може бути видалений.",nameError:"Введіть назву рахунку (до 40 символів).",amountError:"Введіть коректну суму.",sameError:"Виберіть різні рахунки.",fundsError:"На рахунку недостатньо коштів для переказу.",transferNone:"Переказів поки немає.",transfer:"Переказ",main:"Основний рахунок"},
+ ru:{title:"Кошельки и счета",name:"Название счёта",namePlaceholder:"Например: Наличные",opening:"Начальный остаток, ₴",add:"Добавить счёт",total:"Всего на счетах",transferTitle:"Перевод между счетами",from:"Откуда",to:"Куда",amount:"Сумма перевода, ₴",send:"Перевести",account:"Счёт",cash:"Наличные",card:"Банковская карта",savings:"Накопления",delete:"Удалить",deleteConfirm:"Удалить этот счёт?",inUse:"Счёт используется в операциях или переводах и не может быть удалён.",nameError:"Введите название счёта (до 40 символов).",amountError:"Введите корректную сумму.",sameError:"Выберите разные счета.",fundsError:"На счёте недостаточно средств для перевода.",transferNone:"Переводов пока нет.",transfer:"Перевод",main:"Основной счёт"},
+ en:{title:"Wallets & accounts",name:"Account name",namePlaceholder:"For example: Cash",opening:"Opening balance, ₴",add:"Add account",total:"Total across accounts",transferTitle:"Transfer between accounts",from:"From",to:"To",amount:"Transfer amount, ₴",send:"Transfer",account:"Account",cash:"Cash",card:"Bank card",savings:"Savings",delete:"Delete",deleteConfirm:"Delete this account?",inUse:"This account is used by transactions or transfers and cannot be deleted.",nameError:"Enter an account name (up to 40 characters).",amountError:"Enter a valid amount.",sameError:"Choose two different accounts.",fundsError:"Insufficient funds for this transfer.",transferNone:"No transfers yet.",transfer:"Transfer",main:"Main account"},
+ de:{title:"Geldbörsen & Konten",name:"Kontoname",namePlaceholder:"Zum Beispiel: Bargeld",opening:"Anfangssaldo, ₴",add:"Konto hinzufügen",total:"Gesamt auf allen Konten",transferTitle:"Überweisung zwischen Konten",from:"Von",to:"An",amount:"Überweisungsbetrag, ₴",send:"Überweisen",account:"Konto",cash:"Bargeld",card:"Bankkarte",savings:"Ersparnisse",delete:"Löschen",deleteConfirm:"Dieses Konto löschen?",inUse:"Dieses Konto wird in Buchungen oder Überweisungen verwendet und kann nicht gelöscht werden.",nameError:"Kontonamen eingeben (bis zu 40 Zeichen).",amountError:"Gültigen Betrag eingeben.",sameError:"Zwei verschiedene Konten auswählen.",fundsError:"Nicht genügend Guthaben für diese Überweisung.",transferNone:"Noch keine Überweisungen.",transfer:"Überweisung",main:"Hauptkonto"}
+};
+const wt=key=>walletTranslations[language][key]||key;
+const DEFAULT_WALLET_ID="wallet_main";
+function validWallet(w){return !!w&&typeof w==="object"&&!Array.isArray(w)&&typeof w.id==="string"&&/^wallet_[a-z0-9_-]{1,60}$/.test(w.id)&&typeof w.name==="string"&&!!w.name.trim()&&w.name.length<=40&&Number.isFinite(Number(w.opening))&&Number(w.opening)>=0&&Number(w.opening)<=1e12}
+function loadWallets(){try{const parsed=JSON.parse(readStorage(STORAGE_KEYS.wallets,"null"));if(!Array.isArray(parsed))return [{id:DEFAULT_WALLET_ID,name:wt("main"),opening:0}];const valid=parsed.filter(validWallet).slice(0,50);return valid.length?valid:[{id:DEFAULT_WALLET_ID,name:wt("main"),opening:0}]}catch{return [{id:DEFAULT_WALLET_ID,name:wt("main"),opening:0}]}}
+let wallets=loadWallets();
+if(!wallets.some(w=>w.id===DEFAULT_WALLET_ID))wallets.unshift({id:DEFAULT_WALLET_ID,name:wt("main"),opening:0});
+operations.forEach(o=>{if(!wallets.some(w=>w.id===o.walletId))o.walletId=DEFAULT_WALLET_ID});
+function validTransfer(x){return !!x&&typeof x==="object"&&!Array.isArray(x)&&typeof x.id==="string"&&typeof x.from==="string"&&typeof x.to==="string"&&x.from!==x.to&&Number.isFinite(Number(x.amount))&&Number(x.amount)>0&&Number(x.amount)<=1e12&&typeof x.date==="string"}
+function loadTransfers(){try{const parsed=JSON.parse(readStorage(STORAGE_KEYS.transfers,"[]"));return Array.isArray(parsed)?parsed.filter(x=>validTransfer(x)&&wallets.some(w=>w.id===x.from)&&wallets.some(w=>w.id===x.to)).slice(-5000):[]}catch{return []}}
+let transfers=loadTransfers();
+function saveWalletData(){try{localStorage.setItem(STORAGE_KEYS.wallets,JSON.stringify(wallets));localStorage.setItem(STORAGE_KEYS.transfers,JSON.stringify(transfers));return true}catch{alert(t("storageError"));return false}}
+function walletBalance(id){const w=wallets.find(x=>x.id===id);if(!w)return 0;let value=Number(w.opening)||0;operations.filter(o=>(o.walletId||DEFAULT_WALLET_ID)===id).forEach(o=>value+=(o.type==="income"?1:-1)*Number(o.amount||0));transfers.forEach(x=>{if(x.from===id)value-=Number(x.amount);if(x.to===id)value+=Number(x.amount)});return value}
+function renderWalletSelectors(){const ids=["operationWallet","transferFrom","transferTo"];ids.forEach(id=>{const el=$(id),old=el.value;el.replaceChildren();wallets.forEach(w=>{const op=document.createElement("option");op.value=w.id;op.textContent=w.name;el.append(op)});if(wallets.some(w=>w.id===old))el.value=old});if(wallets.length>1&&$("transferTo").value===$("transferFrom").value)$("transferTo").selectedIndex=1}
+function renderWallets(){
+ renderWalletSelectors();const root=$("walletList");root.replaceChildren();let total=0;
+ wallets.forEach(w=>{const balance=walletBalance(w.id);total+=balance;const row=document.createElement("div");row.className="wallet-item";const info=document.createElement("div");info.className="details";const name=document.createElement("strong");name.textContent=w.name;const bal=document.createElement("small");bal.textContent=money(balance);bal.className=balance<0?"expense":"income";info.append(name,bal);const del=document.createElement("button");del.type="button";del.className="wallet-delete";del.textContent=wt("delete");del.disabled=w.id===DEFAULT_WALLET_ID;del.addEventListener("click",()=>deleteWallet(w.id));row.append(info,del);root.append(row)});
+ $("walletTotal").textContent=wt("total")+": "+money(total);$("transferHistory").replaceChildren();if(!transfers.length){const e=document.createElement("p");e.className="muted";e.textContent=wt("transferNone");$("transferHistory").append(e)}else transfers.slice().reverse().slice(0,10).forEach(x=>{const row=document.createElement("div");row.className="operation";const a=wallets.find(w=>w.id===x.from),b=wallets.find(w=>w.id===x.to);const label=document.createElement("span");label.textContent=(a?.name||"")+" → "+(b?.name||"")+" • "+x.date;const amount=document.createElement("strong");amount.textContent=money(x.amount);row.append(label,amount);$("transferHistory").append(row)});
+}
+function addWallet(){const name=$("walletName").value.trim(),opening=Number($("walletOpening").value);if(!name||name.length>40){alert(wt("nameError"));return}if(!Number.isFinite(opening)||opening<0||opening>1e12){alert(wt("amountError"));return}if(wallets.length>=50){alert(wt("nameError"));return}const w={id:"wallet_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7),name,opening};wallets.push(w);if(!saveWalletData()){wallets.pop();return}$("walletName").value="";$("walletOpening").value="0";renderWallets()}
+function deleteWallet(id){if(operations.some(o=>(o.walletId||DEFAULT_WALLET_ID)===id)||transfers.some(x=>x.from===id||x.to===id)){alert(wt("inUse"));return}if(!confirm(wt("deleteConfirm")))return;const i=wallets.findIndex(w=>w.id===id);if(i<0)return;const removed=wallets.splice(i,1)[0];if(!saveWalletData()){wallets.splice(i,0,removed);return}renderWallets()}
+function addTransfer(){const from=$("transferFrom").value,to=$("transferTo").value,amount=Number($("transferAmount").value);if(from===to){alert(wt("sameError"));return}if(!Number.isFinite(amount)||amount<=0||amount>1e12){alert(wt("amountError"));return}if(walletBalance(from)<amount){alert(wt("fundsError"));return}const x={id:"transfer_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7),from,to,amount,date:new Date().toLocaleDateString("ru-RU")};transfers.push(x);if(!saveWalletData()){transfers.pop();return}$("transferAmount").value="";renderWallets()}
+function applyWalletLanguage(){const map={walletTitle:"title",walletNameLabel:"name",walletOpeningLabel:"opening",addWalletButton:"add",transferTitle:"transferTitle",transferFromLabel:"from",transferToLabel:"to",transferAmountLabel:"amount",addTransferButton:"send",operationWalletLabel:"account"};Object.entries(map).forEach(([id,key])=>{if($(id))$(id).textContent=wt(key)});$("walletName").placeholder=wt("namePlaceholder")}
+
+
 function localMonth(d=new Date()){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
 function dateKey(op){
  if(op.isoDate){const d=new Date(op.isoDate);if(!isNaN(d))return localMonth(d)}
@@ -245,7 +293,7 @@ function applyLanguage(){
  document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n)});
  document.querySelectorAll("[data-placeholder]").forEach(el=>el.placeholder=t(el.dataset.placeholder));
  $("language").value=language;$("budgetInput").value=monthlyBudget||"";
- renderCategoryOptions();renderCategoryManagement();updateScreen();
+ renderCategoryOptions();renderCategoryManagement();applyWalletLanguage();updateScreen();
 }
 function saveBudget(){
  const n=Number($("budgetInput").value);
@@ -256,7 +304,7 @@ function addOperation(){
  const type=$("type").value,category=$("category").value,description=$("description").value.trim(),amount=Number($("amount").value);
  if(!description||description.length>500||!Number.isFinite(amount)||amount<=0||amount>1e12){alert(t("fillError"));return}
  const now=new Date();
- operations.push({type,category,description,amount,date:now.toLocaleDateString("ru-RU"),isoDate:now.toISOString()});
+ operations.push({type,category,description,amount,walletId:$("operationWallet").value||DEFAULT_WALLET_ID,date:now.toLocaleDateString("ru-RU"),isoDate:now.toISOString()});
  if(!save()){operations.pop();return}$("description").value="";$("amount").value="";updateScreen();
 }
 function deleteOperation(index){if(!confirm(t("deleteConfirm")))return;const removed=operations.splice(index,1);if(!save()){operations.splice(index,0,...removed);return}updateScreen()}
@@ -307,13 +355,13 @@ function renderStats(){
 function updateScreen(){
  const income=operations.filter(o=>o.type==="income").reduce((s,o)=>s+Number(o.amount||0),0),expenses=operations.filter(o=>o.type==="expense").reduce((s,o)=>s+Number(o.amount||0),0);
  $("totalIncome").textContent=money(income);$("totalExpenses").textContent=money(expenses);$("balance").textContent=money(income-expenses);$("balance").className=income-expenses>=0?"income":"expense";
- renderBudget();renderMonthlyChart();renderCategoryChart();renderStats();renderGoals();
+ renderBudget();renderMonthlyChart();renderCategoryChart();renderStats();renderGoals();renderWallets();
  const root=$("history");root.replaceChildren(),filter=$("historyFilter").value;
  const visible=operations.map((operation,index)=>({operation,index})).filter(x=>filter==="all"||x.operation.type===filter);
  if(!visible.length){const e=document.createElement("div");e.className="empty";e.textContent=operations.length?(language==="en"?"No transactions of this type yet":language==="de"?"Keine Buchungen dieses Typs":language==="uk"?"Операцій цього типу поки немає":"Операций этого типа пока нет"):(language==="en"?"No transactions yet":language==="de"?"Noch keine Buchungen":language==="uk"?"Операцій поки немає":"Пока операций нет");root.append(e);return}
  visible.slice().reverse().forEach(({operation:o,index})=>{
   const row=document.createElement("div");row.className="operation";const details=document.createElement("div");details.className="details";
-  const title=document.createElement("strong");title.textContent=o.description;const sub=document.createElement("small");sub.textContent=categoryLabel(o.category||"other")+" • "+(o.date||"");details.append(title,sub);
+  const title=document.createElement("strong");title.textContent=o.description;const sub=document.createElement("small");sub.textContent=categoryLabel(o.category||"other")+" • "+(wallets.find(w=>w.id===(o.walletId||DEFAULT_WALLET_ID))?.name||wt("main"))+" • "+(o.date||"");details.append(title,sub);
   const right=document.createElement("div");right.className="right";const amount=document.createElement("strong");amount.className=o.type==="income"?"income":"expense";amount.textContent=(o.type==="income"?"+":"−")+money(o.amount);
   const del=document.createElement("button");del.className="delete";del.type="button";del.textContent=language==="en"?"Delete":language==="de"?"Löschen":language==="uk"?"Видалити":"Удалить";del.addEventListener("click",()=>deleteOperation(index));
   right.append(amount,del);row.append(details,right);root.append(row)
@@ -352,7 +400,7 @@ function renderGoals(){
 
 function exportBackup(){
  const backup={app:"BRIGADIR_FINANCE",version:1,createdAt:new Date().toISOString(),data:{
-  operations:operations,language:language,budget:monthlyBudget,categories:customCategories,goals:goals
+  operations:operations,language:language,budget:monthlyBudget,categories:customCategories,goals:goals,wallets:wallets,transfers:transfers
  }};
  const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
  const url=URL.createObjectURL(blob),a=document.createElement("a");
@@ -370,8 +418,11 @@ function validateBackup(data){
  if(!Number.isFinite(budget)||budget<0||budget>1e12)return null;
  const categories=Array.isArray(d.categories)?d.categories.filter(c=>c&&typeof c==="object"&&(c.type==="income"||c.type==="expense")&&typeof c.id==="string"&&/^custom_[a-z0-9_-]{1,50}$/.test(c.id)&&typeof c.name==="string"&&c.name.trim()&&c.name.length<=40).slice(0,100):[];
  const goals=Array.isArray(d.goals)?d.goals.filter(validGoal).slice(0,50):[];
+ const restoredWallets=Array.isArray(d.wallets)?d.wallets.filter(validWallet).slice(0,50):[{id:DEFAULT_WALLET_ID,name:wt("main"),opening:0}];
+ if(!restoredWallets.some(w=>w.id===DEFAULT_WALLET_ID))restoredWallets.unshift({id:DEFAULT_WALLET_ID,name:wt("main"),opening:0});
+ const restoredTransfers=Array.isArray(d.transfers)?d.transfers.filter(validTransfer).filter(x=>restoredWallets.some(w=>w.id===x.from)&&restoredWallets.some(w=>w.id===x.to)).slice(-5000):[];
  if(d.goals!==undefined&&(!Array.isArray(d.goals)||goals.length!==d.goals.length))return null;
- return {operations:d.operations,language:d.language,budget,categories,goals};
+ return {operations:d.operations,language:d.language,budget,categories,goals,wallets:restoredWallets,transfers:restoredTransfers};
 }
 async function importBackup(file){
  if(!file)return;
@@ -384,7 +435,7 @@ async function importBackup(file){
    language:readStorage(STORAGE_KEYS.language,null),
    budget:readStorage(STORAGE_KEYS.budget,null),
    categories:readStorage(STORAGE_KEYS.categories,null),
-   goals:readStorage(STORAGE_KEYS.goals,null)
+   goals:readStorage(STORAGE_KEYS.goals,null),wallets:readStorage(STORAGE_KEYS.wallets,null),transfers:readStorage(STORAGE_KEYS.transfers,null)
   };
   try{
    localStorage.setItem(STORAGE_KEYS.operations,JSON.stringify(restored.operations));
@@ -392,21 +443,25 @@ async function importBackup(file){
    localStorage.setItem(STORAGE_KEYS.budget,String(restored.budget));
    localStorage.setItem(STORAGE_KEYS.categories,JSON.stringify(restored.categories));
    localStorage.setItem(STORAGE_KEYS.goals,JSON.stringify(restored.goals));
+   localStorage.setItem(STORAGE_KEYS.wallets,JSON.stringify(restored.wallets));
+   localStorage.setItem(STORAGE_KEYS.transfers,JSON.stringify(restored.transfers));
   }catch(error){
    try{
-    for(const [key,value] of [[STORAGE_KEYS.operations,previous.operations],[STORAGE_KEYS.language,previous.language],[STORAGE_KEYS.budget,previous.budget],[STORAGE_KEYS.categories,previous.categories],[STORAGE_KEYS.goals,previous.goals]]){
+    for(const [key,value] of [[STORAGE_KEYS.operations,previous.operations],[STORAGE_KEYS.language,previous.language],[STORAGE_KEYS.budget,previous.budget],[STORAGE_KEYS.categories,previous.categories],[STORAGE_KEYS.goals,previous.goals],[STORAGE_KEYS.wallets,previous.wallets],[STORAGE_KEYS.transfers,previous.transfers]]){
      if(value===null)localStorage.removeItem(key);else localStorage.setItem(key,value);
     }
    }catch{}
    throw error;
   }
-  operations=restored.operations;language=restored.language;monthlyBudget=restored.budget;customCategories=restored.categories;goals=restored.goals;
+  operations=restored.operations;language=restored.language;monthlyBudget=restored.budget;customCategories=restored.categories;goals=restored.goals;wallets=restored.wallets;transfers=restored.transfers;
   applyLanguage();alert(t("backupRestored"));
  }catch(error){
   if(error instanceof SyntaxError)alert(t("backupInvalid"));
   else alert(t("backupReadError"));
  }finally{$("backupFile").value=""}
 }
+$("addWalletButton").addEventListener("click",addWallet);$("addTransferButton").addEventListener("click",addTransfer);
+$("transferFrom").addEventListener("change",()=>{if($("transferFrom").value===$("transferTo").value&&wallets.length>1){const other=wallets.find(w=>w.id!==$("transferFrom").value);$("transferTo").value=other.id}});
 $("exportBackup").addEventListener("click",exportBackup);
 $("importBackup").addEventListener("click",()=>$("backupFile").click());
 $("backupFile").addEventListener("change",e=>importBackup(e.target.files&&e.target.files[0]));

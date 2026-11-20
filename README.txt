@@ -1,12 +1,5 @@
-FINORA V4.8 — BRAND UPDATE
+FINORA V4.9
 
-Upload/replace these files in the root of your GitHub Pages repository:
-- index.html
-- sw.js
-- manifest.webmanifest
-- icon.svg
-- icon-192.png
-- icon-512.png
+Update: wallets and accounts, individual balances, opening balances, transfers between accounts without affecting income/expense statistics. Existing operations are assigned to the Main account. Wallets and transfers are included in backup and restore.
 
-Keep your existing user data. The internal storage keys and legacy backup identifier are intentionally preserved for compatibility.
-After committing, reopen the installed PWA. If the old name/icon remains, close the app fully and open the site once in the browser to let the service worker update, then install/open again.
+Upload all 7 files to the root of the GitHub Pages repository, replacing the previous versions.
