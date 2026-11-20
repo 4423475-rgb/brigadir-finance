@@ -1,6 +1,9 @@
-FINORA V5.1 — PUBLIC BETA
+FINORA V5.2 — PUBLIC BETA
 
 WHAT'S NEW
+- Wallet and transfer storage writes now roll back together if a later write fails.
+- Transaction dates are checked as real calendar dates; impossible dates such as February 31 are rejected.
+- Updated service worker cache to V5.2.
 - Edit saved transactions without deleting and recreating them.
 - Set or correct the transaction date.
 - Search transaction history by description, category, or account.
@@ -22,7 +25,7 @@ IMPORTANT PRODUCT LIMITATIONS — PUBLIC BETA
 - Do not store passwords, full card numbers, or other sensitive secrets in the app.
 
 DEPLOYMENT
-1. Download and extract FINORA_V5_0.zip.
+1. Download and extract FINORA_V5_2.zip.
 2. Replace the files in the root of the existing GitHub Pages repository with all files from this archive.
 3. Commit the changes.
 4. Open the published app, refresh it, and test with small sample transactions.

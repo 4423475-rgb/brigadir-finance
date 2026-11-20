@@ -158,6 +158,12 @@ const extraTranslations={
 const $=id=>document.getElementById(id);
 const STORAGE_KEYS={operations:"brigadirOperations",language:"brigadirLanguage",budget:"brigadirMonthlyBudget",categories:"brigadirCustomCategories",recovery:"brigadirOperations_recovery",goals:"brigadirFinancialGoals",wallets:"finoraWallets",transfers:"finoraTransfers"};
 function readStorage(key,fallback=""){try{return localStorage.getItem(key)??fallback}catch{return fallback}}
+function isRealISODate(value){
+ if(typeof value!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
+ const [year,month,day]=value.split("-").map(Number);
+ const date=new Date(Date.UTC(year,month-1,day));
+ return date.getUTCFullYear()===year&&date.getUTCMonth()===month-1&&date.getUTCDate()===day;
+}
 function validOperation(o){
  if(!o||typeof o!=="object"||Array.isArray(o))return false;
  if(o.type!=="income"&&o.type!=="expense")return false;
@@ -165,7 +171,7 @@ function validOperation(o){
  const amount=Number(o.amount);if(!Number.isFinite(amount)||amount<=0||amount>1e12)return false;
  if(o.category!==undefined&&(typeof o.category!=="string"||o.category.length>60))return false;
  if(o.date!==undefined&&(typeof o.date!=="string"||o.date.length>40))return false;
- if(o.isoDate!==undefined&&(typeof o.isoDate!=="string"||o.isoDate.length>50))return false;
+ if(o.isoDate!==undefined&&(typeof o.isoDate!=="string"||o.isoDate.length>50||!isRealISODate(o.isoDate.slice(0,10))))return false;
  return true;
 }
 function loadOperations(){
@@ -276,7 +282,21 @@ operations.forEach(o=>{if(!wallets.some(w=>w.id===o.walletId))o.walletId=DEFAULT
 function validTransfer(x){return !!x&&typeof x==="object"&&!Array.isArray(x)&&typeof x.id==="string"&&typeof x.from==="string"&&typeof x.to==="string"&&x.from!==x.to&&Number.isFinite(Number(x.amount))&&Number(x.amount)>0&&Number(x.amount)<=1e12&&typeof x.date==="string"}
 function loadTransfers(){try{const parsed=JSON.parse(readStorage(STORAGE_KEYS.transfers,"[]"));return Array.isArray(parsed)?parsed.filter(x=>validTransfer(x)&&wallets.some(w=>w.id===x.from)&&wallets.some(w=>w.id===x.to)).slice(-5000):[]}catch{return []}}
 let transfers=loadTransfers();
-function saveWalletData(){try{localStorage.setItem(STORAGE_KEYS.wallets,JSON.stringify(wallets));localStorage.setItem(STORAGE_KEYS.transfers,JSON.stringify(transfers));walletsNeedSave=false;return true}catch{alert(t("storageError"));return false}}
+function saveWalletData(){
+ const previousWallets=readStorage(STORAGE_KEYS.wallets,null),previousTransfers=readStorage(STORAGE_KEYS.transfers,null);
+ try{
+  localStorage.setItem(STORAGE_KEYS.wallets,JSON.stringify(wallets));
+  localStorage.setItem(STORAGE_KEYS.transfers,JSON.stringify(transfers));
+  walletsNeedSave=false;return true;
+ }catch(error){
+  // Roll back the first write if the second one fails (for example, storage quota).
+  try{
+   if(previousWallets===null)localStorage.removeItem(STORAGE_KEYS.wallets);else localStorage.setItem(STORAGE_KEYS.wallets,previousWallets);
+   if(previousTransfers===null)localStorage.removeItem(STORAGE_KEYS.transfers);else localStorage.setItem(STORAGE_KEYS.transfers,previousTransfers);
+  }catch{}
+  alert(t("storageError"));return false;
+ }
+}
 if(walletsNeedSave)saveWalletData();
 function walletBalance(id){const w=wallets.find(x=>x.id===id);if(!w)return 0;let value=Number(w.opening)||0;operations.filter(o=>(o.walletId||DEFAULT_WALLET_ID)===id).forEach(o=>value+=(o.type==="income"?1:-1)*Number(o.amount||0));transfers.forEach(x=>{if(x.from===id)value-=Number(x.amount);if(x.to===id)value+=Number(x.amount)});return value}
 function renderWalletSelectors(){const ids=["operationWallet","transferFrom","transferTo"];ids.forEach(id=>{const el=$(id),old=el.value;el.replaceChildren();wallets.forEach(w=>{const op=document.createElement("option");op.value=w.id;op.textContent=w.name;el.append(op)});if(wallets.some(w=>w.id===old))el.value=old});if(wallets.length>1&&$("transferTo").value===$("transferFrom").value)$("transferTo").selectedIndex=1}
@@ -339,7 +359,7 @@ function addOperation(){
  const type=$("type").value,category=$("category").value,enteredDescription=$("description").value.trim(),amount=Number($("amount").value),walletId=$("operationWallet").value||DEFAULT_WALLET_ID,dateValue=$("operationDate").value||todayInputValue();
  if(type!=="income"&&type!=="expense"){alert(t("fillError"));return}
  if(!Number.isFinite(amount)||amount<=0||amount>1e12){alert(t("fillError"));$("amount").focus();return}
- if(enteredDescription.length>500||!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)||isNaN(new Date(dateValue+"T12:00:00").getTime())){alert(t("fillError"));return}
+ if(enteredDescription.length>500||!isRealISODate(dateValue)){alert(t("fillError"));return}
  if(!wallets.some(w=>w.id===walletId)){alert(t("fillError"));return}
  const description=enteredDescription||categoryLabel(category),localDate=new Date(dateValue+"T12:00:00"),operation={type,category,description,amount,walletId,date:localDate.toLocaleDateString("ru-RU"),isoDate:localDate.toISOString()};
  if(editingIndex!==null){const previous=operations[editingIndex];if(!previous)return;operations[editingIndex]=operation;if(!save()){operations[editingIndex]=previous;return}}
