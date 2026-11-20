@@ -1,5 +1,10 @@
-FINORA V4.9
+FINORA V4.10
 
-Update: wallets and accounts, individual balances, opening balances, transfers between accounts without affecting income/expense statistics. Existing operations are assigned to the Main account. Wallets and transfers are included in backup and restore.
+Обновление счетов:
+- При первом запуске доступны два основных счета: «Наличные» и «Банковская карта».
+- В форме дохода и расхода можно выбрать счет.
+- Старый «Основной счёт» автоматически переименовывается в «Наличные» без потери баланса и операций.
+- Существующие счета, операции и переводы сохраняются.
+- Два стандартных счета нельзя удалить.
 
-Upload all 7 files to the root of the GitHub Pages repository, replacing the previous versions.
+Обновите файлы проекта на GitHub Pages, заменив файлы из архива.
