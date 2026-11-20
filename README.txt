@@ -1,9 +1,9 @@
-FINORA V5.2 — PUBLIC BETA
+FINORA V5.3 — PUBLIC BETA
 
 WHAT'S NEW
 - Wallet and transfer storage writes now roll back together if a later write fails.
 - Transaction dates are checked as real calendar dates; impossible dates such as February 31 are rejected.
-- Updated service worker cache to V5.2.
+- Updated service worker cache to V5.3.
 - Edit saved transactions without deleting and recreating them.
 - Set or correct the transaction date.
 - Search transaction history by description, category, or account.
