@@ -1,5 +1,5 @@
-const CACHE_NAME = "brigadir-finance-v4-7";
-const APP_FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
+const CACHE_NAME = "finora-v4-8";
+const APP_FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
 const APP_PATHS = new Set(APP_FILES.map(path => new URL(path, self.registration.scope).pathname));
 
 self.addEventListener("install", event => {
@@ -14,7 +14,7 @@ self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(keys
-        .filter(key => key.startsWith("brigadir-finance-") && key !== CACHE_NAME)
+        .filter(key => (key.startsWith("brigadir-finance-") || key.startsWith("finora-")) && key !== CACHE_NAME)
         .map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
