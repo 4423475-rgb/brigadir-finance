@@ -1,3 +1,5 @@
+FINORA V5.5 — navigation and usability update
+
 FINORA V5.3 — PUBLIC BETA
 
 WHAT'S NEW
@@ -45,7 +47,7 @@ RELEASE TEST CHECKLIST
 This is a public beta, not a certified accounting, banking, or tax product.
 
 
-FINORA V5.4
+FINORA V5.5
 - Recurring income and expense schedules (weekly, monthly, yearly; every 1–12 periods).
 - Schedules can be edited, paused, resumed and deleted. Due entries are processed when the app opens; missed periods are caught up, with duplicate prevention.
 - Recurring schedules are included in JSON backups. Older backups without schedules remain supported.
