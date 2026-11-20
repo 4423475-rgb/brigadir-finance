@@ -307,11 +307,23 @@ function saveBudget(){
  try{localStorage.setItem(STORAGE_KEYS.budget,String(n))}catch{alert(t("storageError"));return}monthlyBudget=n;updateScreen();alert(t("saved"));
 }
 function addOperation(){
- const type=$("type").value,category=$("category").value,description=$("description").value.trim(),amount=Number($("amount").value);
- if(!description||description.length>500||!Number.isFinite(amount)||amount<=0||amount>1e12){alert(t("fillError"));return}
+ const type=$("type").value,category=$("category").value;
+ const enteredDescription=$("description").value.trim();
+ const amount=Number($("amount").value);
+ const walletId=$("operationWallet").value||DEFAULT_WALLET_ID;
+ if(type!=="income"&&type!=="expense"){alert(t("fillError"));return}
+ if(!Number.isFinite(amount)||amount<=0||amount>1e12){alert(t("fillError"));$("amount").focus();return}
+ if(enteredDescription.length>500){alert(t("fillError"));$("description").focus();return}
+ if(!wallets.some(w=>w.id===walletId)){alert(t("fillError"));return}
+ const description=enteredDescription||categoryLabel(category);
  const now=new Date();
- operations.push({type,category,description,amount,walletId:$("operationWallet").value||DEFAULT_WALLET_ID,date:now.toLocaleDateString("ru-RU"),isoDate:now.toISOString()});
- if(!save()){operations.pop();return}$("description").value="";$("amount").value="";updateScreen();
+ const operation={type,category,description,amount,walletId,date:now.toLocaleDateString("ru-RU"),isoDate:now.toISOString()};
+ operations.push(operation);
+ if(!save()){operations.pop();return}
+ $("description").value="";
+ $("amount").value="";
+ updateScreen();
+ $("operationWallet").value=walletId;
 }
 function deleteOperation(index){if(!confirm(t("deleteConfirm")))return;const removed=operations.splice(index,1);if(!save()){operations.splice(index,0,...removed);return}updateScreen()}
 function renderBudget(){
