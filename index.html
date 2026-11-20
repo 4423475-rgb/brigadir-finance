@@ -52,6 +52,15 @@ input,select{background:#0e192b;color:white;border:1px solid #34445d}button{marg
 <div class="muted" id="budgetText"></div>
 </section>
 <section class="panel">
+<h2 data-i18n="backupTitle">Резервна копія</h2>
+<p class="muted" data-i18n="backupDescription">Збережіть дані у файл або відновіть їх із резервної копії.</p>
+<div class="row">
+<button id="exportBackup" type="button" data-i18n="exportBackup">Завантажити копію</button>
+<button id="importBackup" type="button" class="secondary" data-i18n="importBackup">Відновити копію</button>
+</div>
+<input id="backupFile" type="file" accept=".json,application/json" hidden>
+</section>
+<section class="panel">
 <h2 data-i18n="monthlyChart">Доходи та витрати за місяцями</h2>
 <div class="chart" id="monthlyChart"></div>
 <div class="legend"><span><i class="dot" style="background:#4ade80"></i><span data-i18n="income">Дохід</span></span><span><i class="dot" style="background:#fb7185"></i><span data-i18n="expenses">Витрати</span></span></div>
@@ -81,10 +90,10 @@ input,select{background:#0e192b;color:white;border:1px solid #34445d}button{marg
 </main>
 <script>
 const translations={
-uk:{income:"Дохід",expenses:"Витрати",balance:"Баланс",budgetTitle:"Місячний бюджет",budgetLimit:"Ліміт витрат на місяць, ₴",save:"Зберегти",monthlyChart:"Доходи та витрати за місяцями",categoryChart:"Витрати за категоріями (цей місяць)",newOperation:"Нова операція",type:"Тип операції",category:"Категорія",work:"Робота",materials:"Матеріали",tools:"Інструменти",salary:"Зарплата",advance:"Аванс",other:"Інше",description:"Опис",descriptionPlaceholder:"Наприклад: оплата за об’єкт",amount:"Сума, ₴",amountPlaceholder:"Введіть суму",add:"Додати операцію",history:"Історія операцій",show:"Показати",all:"Усі операції",onlyIncome:"Лише доходи",onlyExpenses:"Лише витрати",fillError:"Заповніть опис і введіть суму більше нуля.",deleteConfirm:"Видалити цю операцію?",none:"Операцій поки немає",noneFiltered:"Операцій цього типу поки немає",budgetUnset:"Встановіть місячний ліміт витрат.",spent:"Витрачено",left:"Залишилося",over:"Перевищення бюджету",saved:"Бюджет збережено",noExpenses:"Витрат за цей місяць немає",storageError:"Не вдалося зберегти дані. Перевірте вільне місце та налаштування браузера.",dataRecovered:"Частину пошкоджених записів пропущено. Резервну копію збережено в пам’яті браузера."},
-ru:{income:"Доходы",expenses:"Расходы",balance:"Баланс",budgetTitle:"Месячный бюджет",budgetLimit:"Лимит расходов на месяц, ₴",save:"Сохранить",monthlyChart:"Доходы и расходы по месяцам",categoryChart:"Расходы по категориям (этот месяц)",newOperation:"Новая операция",type:"Тип операции",category:"Категория",work:"Работа",materials:"Материалы",tools:"Инструменты",salary:"Зарплата",advance:"Аванс",other:"Другое",description:"Описание",descriptionPlaceholder:"Например: оплата за объект",amount:"Сумма, ₴",amountPlaceholder:"Введите сумму",add:"Добавить операцию",history:"История операций",show:"Показать",all:"Все операции",onlyIncome:"Только доходы",onlyExpenses:"Только расходы",fillError:"Заполни описание и введи сумму больше нуля.",deleteConfirm:"Удалить эту операцию?",none:"Пока операций нет",noneFiltered:"Операций этого типа пока нет",budgetUnset:"Установи месячный лимит расходов.",spent:"Потрачено",left:"Осталось",over:"Превышение бюджета",saved:"Бюджет сохранён",noExpenses:"В этом месяце расходов нет",storageError:"Не удалось сохранить данные. Проверьте свободное место и настройки браузера.",dataRecovered:"Часть повреждённых записей пропущена. Резервная копия сохранена в памяти браузера."},
-en:{income:"Income",expenses:"Expenses",balance:"Balance",budgetTitle:"Monthly budget",budgetLimit:"Monthly spending limit, ₴",save:"Save",monthlyChart:"Income and expenses by month",categoryChart:"Expenses by category (this month)",newOperation:"New transaction",type:"Transaction type",category:"Category",work:"Work",materials:"Materials",tools:"Tools",salary:"Salary",advance:"Advance",other:"Other",description:"Description",descriptionPlaceholder:"For example: project payment",amount:"Amount, ₴",amountPlaceholder:"Enter amount",add:"Add transaction",history:"Transaction history",show:"Show",all:"All transactions",onlyIncome:"Income only",onlyExpenses:"Expenses only",fillError:"Enter a description and an amount greater than zero.",deleteConfirm:"Delete this transaction?",none:"No transactions yet",noneFiltered:"No transactions of this type yet",budgetUnset:"Set a monthly spending limit.",spent:"Spent",left:"Remaining",over:"Over budget",saved:"Budget saved",noExpenses:"No expenses this month",storageError:"Could not save data. Check browser storage and available space.",dataRecovered:"Some invalid records were skipped. A backup was saved in browser storage."},
-de:{income:"Einnahmen",expenses:"Ausgaben",balance:"Kontostand",budgetTitle:"Monatsbudget",budgetLimit:"Monatliches Ausgabenlimit, ₴",save:"Speichern",monthlyChart:"Einnahmen und Ausgaben pro Monat",categoryChart:"Ausgaben nach Kategorie (dieser Monat)",newOperation:"Neue Buchung",type:"Buchungstyp",category:"Kategorie",work:"Arbeit",materials:"Material",tools:"Werkzeuge",salary:"Gehalt",advance:"Vorschuss",other:"Sonstiges",description:"Beschreibung",descriptionPlaceholder:"Zum Beispiel: Projektzahlung",amount:"Betrag, ₴",amountPlaceholder:"Betrag eingeben",add:"Buchung hinzufügen",history:"Buchungsverlauf",show:"Anzeigen",all:"Alle Buchungen",onlyIncome:"Nur Einnahmen",onlyExpenses:"Nur Ausgaben",fillError:"Beschreibung und einen Betrag größer null eingeben.",deleteConfirm:"Diese Buchung löschen?",none:"Noch keine Buchungen",noneFiltered:"Keine Buchungen dieses Typs",budgetUnset:"Monatliches Ausgabenlimit festlegen.",spent:"Ausgegeben",left:"Übrig",over:"Budget überschritten",saved:"Budget gespeichert",noExpenses:"Diesen Monat keine Ausgaben",storageError:"Daten konnten nicht gespeichert werden. Prüfen Sie den Browserspeicher.",dataRecovered:"Einige ungültige Einträge wurden übersprungen. Eine Sicherung wurde im Browserspeicher abgelegt."}
+uk:{backupTitle:"Резервна копія",backupDescription:"Збережіть дані у файл або відновіть їх із резервної копії.",exportBackup:"Завантажити копію",importBackup:"Відновити копію",backupExported:"Резервну копію завантажено.",backupInvalid:"Файл резервної копії пошкоджений або має невідомий формат.",backupConfirm:"Відновити дані з цього файлу? Поточні доходи, витрати, бюджет і мова будуть замінені.",backupRestored:"Дані успішно відновлено.",backupReadError:"Не вдалося прочитати файл резервної копії.",income:"Дохід",expenses:"Витрати",balance:"Баланс",budgetTitle:"Місячний бюджет",budgetLimit:"Ліміт витрат на місяць, ₴",save:"Зберегти",monthlyChart:"Доходи та витрати за місяцями",categoryChart:"Витрати за категоріями (цей місяць)",newOperation:"Нова операція",type:"Тип операції",category:"Категорія",work:"Робота",materials:"Матеріали",tools:"Інструменти",salary:"Зарплата",advance:"Аванс",other:"Інше",description:"Опис",descriptionPlaceholder:"Наприклад: оплата за об’єкт",amount:"Сума, ₴",amountPlaceholder:"Введіть суму",add:"Додати операцію",history:"Історія операцій",show:"Показати",all:"Усі операції",onlyIncome:"Лише доходи",onlyExpenses:"Лише витрати",fillError:"Заповніть опис і введіть суму більше нуля.",deleteConfirm:"Видалити цю операцію?",none:"Операцій поки немає",noneFiltered:"Операцій цього типу поки немає",budgetUnset:"Встановіть місячний ліміт витрат.",spent:"Витрачено",left:"Залишилося",over:"Перевищення бюджету",saved:"Бюджет збережено",noExpenses:"Витрат за цей місяць немає",storageError:"Не вдалося зберегти дані. Перевірте вільне місце та налаштування браузера.",dataRecovered:"Частину пошкоджених записів пропущено. Резервну копію збережено в пам’яті браузера."},
+ru:{backupTitle:"Резервная копия",backupDescription:"Сохраните данные в файл или восстановите их из резервной копии.",exportBackup:"Скачать копию",importBackup:"Восстановить копию",backupExported:"Резервная копия загружена.",backupInvalid:"Файл резервной копии повреждён или имеет неизвестный формат.",backupConfirm:"Восстановить данные из этого файла? Текущие доходы, расходы, бюджет и язык будут заменены.",backupRestored:"Данные успешно восстановлены.",backupReadError:"Не удалось прочитать файл резервной копии.",income:"Доходы",expenses:"Расходы",balance:"Баланс",budgetTitle:"Месячный бюджет",budgetLimit:"Лимит расходов на месяц, ₴",save:"Сохранить",monthlyChart:"Доходы и расходы по месяцам",categoryChart:"Расходы по категориям (этот месяц)",newOperation:"Новая операция",type:"Тип операции",category:"Категория",work:"Работа",materials:"Материалы",tools:"Инструменты",salary:"Зарплата",advance:"Аванс",other:"Другое",description:"Описание",descriptionPlaceholder:"Например: оплата за объект",amount:"Сумма, ₴",amountPlaceholder:"Введите сумму",add:"Добавить операцию",history:"История операций",show:"Показать",all:"Все операции",onlyIncome:"Только доходы",onlyExpenses:"Только расходы",fillError:"Заполни описание и введи сумму больше нуля.",deleteConfirm:"Удалить эту операцию?",none:"Пока операций нет",noneFiltered:"Операций этого типа пока нет",budgetUnset:"Установи месячный лимит расходов.",spent:"Потрачено",left:"Осталось",over:"Превышение бюджета",saved:"Бюджет сохранён",noExpenses:"В этом месяце расходов нет",storageError:"Не удалось сохранить данные. Проверьте свободное место и настройки браузера.",dataRecovered:"Часть повреждённых записей пропущена. Резервная копия сохранена в памяти браузера."},
+en:{backupTitle:"Backup",backupDescription:"Save your data to a file or restore it from a backup.",exportBackup:"Download backup",importBackup:"Restore backup",backupExported:"Backup downloaded.",backupInvalid:"The backup file is damaged or has an unknown format.",backupConfirm:"Restore data from this file? Current income, expenses, budget and language will be replaced.",backupRestored:"Data restored successfully.",backupReadError:"Could not read the backup file.",income:"Income",expenses:"Expenses",balance:"Balance",budgetTitle:"Monthly budget",budgetLimit:"Monthly spending limit, ₴",save:"Save",monthlyChart:"Income and expenses by month",categoryChart:"Expenses by category (this month)",newOperation:"New transaction",type:"Transaction type",category:"Category",work:"Work",materials:"Materials",tools:"Tools",salary:"Salary",advance:"Advance",other:"Other",description:"Description",descriptionPlaceholder:"For example: project payment",amount:"Amount, ₴",amountPlaceholder:"Enter amount",add:"Add transaction",history:"Transaction history",show:"Show",all:"All transactions",onlyIncome:"Income only",onlyExpenses:"Expenses only",fillError:"Enter a description and an amount greater than zero.",deleteConfirm:"Delete this transaction?",none:"No transactions yet",noneFiltered:"No transactions of this type yet",budgetUnset:"Set a monthly spending limit.",spent:"Spent",left:"Remaining",over:"Over budget",saved:"Budget saved",noExpenses:"No expenses this month",storageError:"Could not save data. Check browser storage and available space.",dataRecovered:"Some invalid records were skipped. A backup was saved in browser storage."},
+de:{backupTitle:"Sicherung",backupDescription:"Speichern Sie Ihre Daten in einer Datei oder stellen Sie sie aus einer Sicherung wieder her.",exportBackup:"Sicherung herunterladen",importBackup:"Sicherung wiederherstellen",backupExported:"Sicherung heruntergeladen.",backupInvalid:"Die Sicherungsdatei ist beschädigt oder hat ein unbekanntes Format.",backupConfirm:"Daten aus dieser Datei wiederherstellen? Einnahmen, Ausgaben, Budget und Sprache werden ersetzt.",backupRestored:"Daten erfolgreich wiederhergestellt.",backupReadError:"Die Sicherungsdatei konnte nicht gelesen werden.",income:"Einnahmen",expenses:"Ausgaben",balance:"Kontostand",budgetTitle:"Monatsbudget",budgetLimit:"Monatliches Ausgabenlimit, ₴",save:"Speichern",monthlyChart:"Einnahmen und Ausgaben pro Monat",categoryChart:"Ausgaben nach Kategorie (dieser Monat)",newOperation:"Neue Buchung",type:"Buchungstyp",category:"Kategorie",work:"Arbeit",materials:"Material",tools:"Werkzeuge",salary:"Gehalt",advance:"Vorschuss",other:"Sonstiges",description:"Beschreibung",descriptionPlaceholder:"Zum Beispiel: Projektzahlung",amount:"Betrag, ₴",amountPlaceholder:"Betrag eingeben",add:"Buchung hinzufügen",history:"Buchungsverlauf",show:"Anzeigen",all:"Alle Buchungen",onlyIncome:"Nur Einnahmen",onlyExpenses:"Nur Ausgaben",fillError:"Beschreibung und einen Betrag größer null eingeben.",deleteConfirm:"Diese Buchung löschen?",none:"Noch keine Buchungen",noneFiltered:"Keine Buchungen dieses Typs",budgetUnset:"Monatliches Ausgabenlimit festlegen.",spent:"Ausgegeben",left:"Übrig",over:"Budget überschritten",saved:"Budget gespeichert",noExpenses:"Diesen Monat keine Ausgaben",storageError:"Daten konnten nicht gespeichert werden. Prüfen Sie den Browserspeicher.",dataRecovered:"Einige ungültige Einträge wurden übersprungen. Eine Sicherung wurde im Browserspeicher abgelegt."}
 };
 const $=id=>document.getElementById(id);
 const STORAGE_KEYS={operations:"brigadirOperations",language:"brigadirLanguage",budget:"brigadirMonthlyBudget",recovery:"brigadirOperations_recovery"};
@@ -196,6 +205,61 @@ function updateScreen(){
   right.append(amount,del);row.append(details,right);root.append(row)
  });
 }
+
+function exportBackup(){
+ const backup={app:"BRIGADIR_FINANCE",version:1,createdAt:new Date().toISOString(),data:{
+  operations:operations,language:language,budget:monthlyBudget
+ }};
+ const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="BRIGADIR_FINANCE_BACKUP_"+new Date().toISOString().slice(0,10)+".json";
+ document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+ alert(t("backupExported"));
+}
+function validateBackup(data){
+ if(!data||typeof data!=="object"||Array.isArray(data)||data.app!=="BRIGADIR_FINANCE"||data.version!==1)return null;
+ const d=data.data;
+ if(!d||typeof d!=="object"||Array.isArray(d)||!Array.isArray(d.operations)||d.operations.length>10000)return null;
+ if(!d.operations.every(validOperation))return null;
+ if(typeof d.language!=="string"||!Object.prototype.hasOwnProperty.call(translations,d.language))return null;
+ const budget=Number(d.budget);
+ if(!Number.isFinite(budget)||budget<0||budget>1e12)return null;
+ return {operations:d.operations,language:d.language,budget};
+}
+async function importBackup(file){
+ if(!file)return;
+ try{
+  const parsed=JSON.parse(await file.text()),restored=validateBackup(parsed);
+  if(!restored){alert(t("backupInvalid"));return}
+  if(!confirm(t("backupConfirm")))return;
+  const previous={
+   operations:readStorage(STORAGE_KEYS.operations,null),
+   language:readStorage(STORAGE_KEYS.language,null),
+   budget:readStorage(STORAGE_KEYS.budget,null)
+  };
+  try{
+   localStorage.setItem(STORAGE_KEYS.operations,JSON.stringify(restored.operations));
+   localStorage.setItem(STORAGE_KEYS.language,restored.language);
+   localStorage.setItem(STORAGE_KEYS.budget,String(restored.budget));
+  }catch(error){
+   try{
+    for(const [key,value] of [[STORAGE_KEYS.operations,previous.operations],[STORAGE_KEYS.language,previous.language],[STORAGE_KEYS.budget,previous.budget]]){
+     if(value===null)localStorage.removeItem(key);else localStorage.setItem(key,value);
+    }
+   }catch{}
+   throw error;
+  }
+  operations=restored.operations;language=restored.language;monthlyBudget=restored.budget;
+  applyLanguage();alert(t("backupRestored"));
+ }catch(error){
+  if(error instanceof SyntaxError)alert(t("backupInvalid"));
+  else alert(t("backupReadError"));
+ }finally{$("backupFile").value=""}
+}
+$("exportBackup").addEventListener("click",exportBackup);
+$("importBackup").addEventListener("click",()=>$("backupFile").click());
+$("backupFile").addEventListener("change",e=>importBackup(e.target.files&&e.target.files[0]));
+
 $("language").addEventListener("change",e=>{const next=e.target.value;if(!translations[next])return;try{localStorage.setItem(STORAGE_KEYS.language,next)}catch{alert(t("storageError"));return}language=next;applyLanguage()});
 $("saveBudget").addEventListener("click",saveBudget);$("addButton").addEventListener("click",addOperation);$("historyFilter").addEventListener("change",updateScreen);
 applyLanguage();
