@@ -1,4 +1,4 @@
-FINORA V5.0 — PUBLIC BETA
+FINORA V5.1 — PUBLIC BETA
 
 WHAT'S NEW
 - Edit saved transactions without deleting and recreating them.

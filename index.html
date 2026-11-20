@@ -294,7 +294,23 @@ function applyWalletLanguage(){const map={walletTitle:"title",walletNameLabel:"n
 function todayInputValue(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function cancelOperationEdit(){editingIndex=null;$("addButton").textContent=t("add");$("cancelEditButton").hidden=true;$("description").value="";$("amount").value="";$("operationDate").value=todayInputValue()}
 function editOperation(index){const o=operations[index];if(!o)return;editingIndex=index;$("type").value=o.type;renderCategoryOptions();$("category").value=o.category||"other";$("operationWallet").value=o.walletId||DEFAULT_WALLET_ID;$("description").value=o.description;$("amount").value=o.amount;const legacyDate=String(o.date||"").match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);$("operationDate").value=(o.isoDate||"").slice(0,10)||(legacyDate?legacyDate[3]+"-"+legacyDate[2].padStart(2,"0")+"-"+legacyDate[1].padStart(2,"0"):todayInputValue());$("addButton").textContent=t("update");$("cancelEditButton").hidden=false;$("newOperation").scrollIntoView({behavior:"smooth",block:"start"})}
-function exportTransactionsCsv(){const rows=[["Date","Type","Category","Description","Account","Amount","Currency"]];operations.forEach(o=>{const w=wallets.find(x=>x.id===(o.walletId||DEFAULT_WALLET_ID));rows.push([(o.isoDate||"").slice(0,10)||o.date||"",o.type==="income"?t("csvTypeIncome"):t("csvTypeExpense"),categoryLabel(o.category||"other"),o.description,w?.name||"",Number(o.amount),"UAH"])});const csv="\uFEFF"+rows.map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");const blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="FINORA_transactions_"+todayInputValue()+".csv";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function csvCell(value){
+ let text=String(value??"");
+ // Neutralize spreadsheet formulas in imported or user-entered text cells.
+ if(/^[\s\u0000-\u001f]*[=+\-@]/.test(text))text="'"+text;
+ return '"'+text.replace(/"/g,'""')+'"';
+}
+function exportTransactionsCsv(){
+ const rows=[["Date","Type","Category","Description","Account","Amount","Currency"]];
+ operations.forEach(o=>{
+  const w=wallets.find(x=>x.id===(o.walletId||DEFAULT_WALLET_ID));
+  rows.push([(o.isoDate||"").slice(0,10)||o.date||"",o.type==="income"?t("csvTypeIncome"):t("csvTypeExpense"),categoryLabel(o.category||"other"),o.description,w?.name||"",Number(o.amount),"UAH"]);
+ });
+ const csv="\uFEFF"+rows.map(row=>row.map(csvCell).join(",")).join("\r\n");
+ const blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="FINORA_transactions_"+todayInputValue()+".csv";document.body.append(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 function localMonth(d=new Date()){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
 function dateKey(op){
  if(op.isoDate){const d=new Date(op.isoDate);if(!isNaN(d))return localMonth(d)}
@@ -428,7 +444,7 @@ function exportBackup(){
  const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
  const url=URL.createObjectURL(blob),a=document.createElement("a");
  a.href=url;a.download="FINORA_BACKUP_"+new Date().toISOString().slice(0,10)+".json";
- document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
  alert(t("backupExported"));
 }
 function validateBackup(data){
@@ -439,21 +455,26 @@ function validateBackup(data){
  if(typeof d.language!=="string"||!Object.prototype.hasOwnProperty.call(translations,d.language))return null;
  const budget=Number(d.budget);
  if(!Number.isFinite(budget)||budget<0||budget>1e12)return null;
- const categories=Array.isArray(d.categories)?d.categories.filter(c=>c&&typeof c==="object"&&(c.type==="income"||c.type==="expense")&&typeof c.id==="string"&&/^custom_[a-z0-9_-]{1,50}$/.test(c.id)&&typeof c.name==="string"&&c.name.trim()&&c.name.length<=40).slice(0,100):[];
- const goals=Array.isArray(d.goals)?d.goals.filter(validGoal).slice(0,50):[];
- const restoredWallets=Array.isArray(d.wallets)?d.wallets.filter(validWallet).slice(0,50):[{id:DEFAULT_WALLET_ID,name:wt("cash"),opening:0},{id:DEFAULT_CARD_ID,name:wt("card"),opening:0}];
+ const validCategory=c=>!!c&&typeof c==="object"&&!Array.isArray(c)&&(c.type==="income"||c.type==="expense")&&typeof c.id==="string"&&/^custom_[a-z0-9_-]{1,50}$/.test(c.id)&&typeof c.name==="string"&&!!c.name.trim()&&c.name.length<=40;
+ if(d.categories!==undefined&&(!Array.isArray(d.categories)||d.categories.length>100||!d.categories.every(validCategory)||new Set(d.categories.map(c=>c.id)).size!==d.categories.length))return null;
+ const categories=Array.isArray(d.categories)?d.categories.slice():[];
+ if(d.goals!==undefined&&(!Array.isArray(d.goals)||d.goals.length>50||!d.goals.every(validGoal)||new Set(d.goals.map(g=>g.id)).size!==d.goals.length))return null;
+ const goals=Array.isArray(d.goals)?d.goals.slice():[];
+ if(d.wallets!==undefined&&(!Array.isArray(d.wallets)||d.wallets.length>50||!d.wallets.every(validWallet)||new Set(d.wallets.map(w=>w.id)).size!==d.wallets.length))return null;
+ const restoredWallets=Array.isArray(d.wallets)?d.wallets.slice():[{id:DEFAULT_WALLET_ID,name:wt("cash"),opening:0},{id:DEFAULT_CARD_ID,name:wt("card"),opening:0}];
  if(!restoredWallets.some(w=>w.id===DEFAULT_WALLET_ID))restoredWallets.unshift({id:DEFAULT_WALLET_ID,name:wt("cash"),opening:0});
  const restoredMain=restoredWallets.find(w=>w.id===DEFAULT_WALLET_ID);
  if(restoredMain&&legacyMainNames.includes(restoredMain.name))restoredMain.name=wt("cash");
  if(!restoredWallets.some(w=>w.id===DEFAULT_CARD_ID)&&restoredWallets.length<50)restoredWallets.push({id:DEFAULT_CARD_ID,name:wt("card"),opening:0});
- const restoredTransfers=Array.isArray(d.transfers)?d.transfers.filter(validTransfer).filter(x=>restoredWallets.some(w=>w.id===x.from)&&restoredWallets.some(w=>w.id===x.to)).slice(-5000):[];
+ if(d.transfers!==undefined&&(!Array.isArray(d.transfers)||d.transfers.length>5000||!d.transfers.every(x=>validTransfer(x)&&restoredWallets.some(w=>w.id===x.from)&&restoredWallets.some(w=>w.id===x.to))||new Set(d.transfers.map(x=>x.id)).size!==d.transfers.length))return null;
+ const restoredTransfers=Array.isArray(d.transfers)?d.transfers.slice():[];
  const restoredOperations=d.operations.map(o=>({...o,walletId:restoredWallets.some(w=>w.id===o.walletId)?o.walletId:DEFAULT_WALLET_ID}));
- if(d.goals!==undefined&&(!Array.isArray(d.goals)||goals.length!==d.goals.length))return null;
  return {operations:restoredOperations,language:d.language,budget,categories,goals,wallets:restoredWallets,transfers:restoredTransfers};
 }
 async function importBackup(file){
  if(!file)return;
  try{
+  if(Number(file.size)>20*1024*1024){alert(t("backupInvalid"));return}
   const parsed=JSON.parse(await file.text()),restored=validateBackup(parsed);
   if(!restored){alert(t("backupInvalid"));return}
   if(!confirm(t("backupConfirm")))return;
