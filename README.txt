@@ -43,3 +43,10 @@ RELEASE TEST CHECKLIST
 - Keep a backup of the previous deployed files before replacing them.
 
 This is a public beta, not a certified accounting, banking, or tax product.
+
+
+FINORA V5.4
+- Recurring income and expense schedules (weekly, monthly, yearly; every 1–12 periods).
+- Schedules can be edited, paused, resumed and deleted. Due entries are processed when the app opens; missed periods are caught up, with duplicate prevention.
+- Recurring schedules are included in JSON backups. Older backups without schedules remain supported.
+- Analytics, accounts, transfers and savings goals are moved to a separate screen; heavy analytics render only when that screen is opened.

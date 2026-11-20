@@ -1,4 +1,4 @@
-const CACHE_NAME = "finora-v5-3";
+const CACHE_NAME = "finora-v5-4";
 const APP_FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
 const APP_PATHS = new Set(APP_FILES.map(path => new URL(path, self.registration.scope).pathname));
 
