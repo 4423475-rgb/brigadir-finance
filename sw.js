@@ -1,4 +1,4 @@
-const CACHE_NAME = "brigadir-finance-v4-6";
+const CACHE_NAME = "brigadir-finance-v4-7";
 const APP_FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
 const APP_PATHS = new Set(APP_FILES.map(path => new URL(path, self.registration.scope).pathname));
 
