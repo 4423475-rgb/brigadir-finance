@@ -1,8 +1,12 @@
-FINORA V5.5 — navigation and usability update
+FINORA V5.5.2 — local data recovery hardening
 
-FINORA V5.3 — PUBLIC BETA
+FINORA V5.5.2 — PUBLIC BETA
 
 WHAT'S NEW
+- Damaged local data in transactions, categories, goals, accounts, transfers, and recurring schedules is preserved as a separate browser-storage recovery copy before invalid entries are skipped.
+- Recovery copies are kept separately and are not silently overwritten; the existing transaction recovery key remains compatible.
+- Startup displays a localized warning naming the affected data sections.
+- Automatic account migration does not overwrite a damaged accounts store.
 - Wallet and transfer storage writes now roll back together if a later write fails.
 - Transaction dates are checked as real calendar dates; impossible dates such as February 31 are rejected.
 - Updated service worker cache to V5.3.
@@ -27,7 +31,7 @@ IMPORTANT PRODUCT LIMITATIONS — PUBLIC BETA
 - Do not store passwords, full card numbers, or other sensitive secrets in the app.
 
 DEPLOYMENT
-1. Download and extract FINORA_V5_2.zip.
+1. Download and extract FINORA_V5_5_2.zip.
 2. Replace the files in the root of the existing GitHub Pages repository with all files from this archive.
 3. Commit the changes.
 4. Open the published app, refresh it, and test with small sample transactions.
